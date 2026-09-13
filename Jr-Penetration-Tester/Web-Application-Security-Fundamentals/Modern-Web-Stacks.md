@@ -11,6 +11,7 @@ Fingerprinting modern web stacks from passive HTTP signals, then exploiting a kn
 - [Next.js](#nextjs)
 - [Django](#django)
 - [LAMP](#lamp)
+- [Automated fingerprinting with Nikto](#automated-fingerprinting-with-nikto)
 
 ---
 
@@ -285,4 +286,32 @@ curl -s --path-as-is "http://10.129.175.13:8080/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>Info:</strong> CVE-2021-41773 is version-specific — <strong>Apache 2.4.49 only</strong>. The 2.4.50 patch blocked single-encoded dots but not double-encoding (tracked separately as <strong>CVE-2021-42013</strong>, using <code>%%32%65%%32%65/</code>). 2.4.51+ is fully patched. A <code>Server</code> header showing <code>Apache/2.4.49</code> or <code>Apache/2.4.50</code> is an immediate signal to try this chain.
+</div>
+
+---
+
+## Automated fingerprinting with Nikto
+
+Manual fingerprinting (Tasks 2–5) teaches *why* each signal matters. On a scope with many hosts, **Nikto** gives a fast first pass instead: it probes a service, reads its response headers, and surfaces stack signals and known misconfigurations — no payload written by hand.
+
+```bash
+nikto -h http://TARGET:<port>
+```
+
+Run once per port, one per stack:
+
+| Port | Stack | `Server` header | Key signal(s) Nikto surfaces | What it confirms |
+| --- | --- | --- | --- | --- |
+| 3000 | MERN | *no banner* | `x-powered-by: Express`, `connect.sid` cookie (missing `HttpOnly`) | Express — matches manual fingerprint from Task 2 |
+| 3001 | Next.js | *no banner* | `x-powered-by: Next.js`, plus `x-nextjs-stale-time` / `x-nextjs-cache` / `x-nextjs-prerender` | App Router running in **production mode** — the precondition for CVE-2025-29927 |
+| 8000 | Django | `WSGIServer/0.2 CPython/3.10.12` | `referrer-policy: same-origin` + `x-content-type-options: nosniff` together | Django's `SecurityMiddleware` is active |
+| 8080 | Apache | `Apache/2.4.49 (Unix)` | Exact version string | Direct **CVE-2021-41773** indicator — no further fingerprinting needed |
+
+**Bonus findings** Nikto turns up along the way (not the focus CVEs, but worth noting):
+
+- **Apache (8080):** ETag leaks inode numbers; `TRACE` method is enabled → flagged as **XST** (Cross-Site Tracing) risk.
+- **MERN (3000):** session cookie missing the `HttpOnly` flag (readable by JavaScript — a session-hijacking risk if combined with XSS).
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Limitation:</strong> Nikto has no templates for <strong>application-level logic flaws</strong> — it confirms the MERN and Django stacks but says nothing about the prototype pollution (Task 2) or SQL injection (Task 4) actually living in them. Automated scanning tells you <em>what</em> you're looking at; the manual techniques still find the bug.
 </div>
