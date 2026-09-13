@@ -6,9 +6,26 @@ Fingerprinting modern web stacks from passive HTTP signals, then exploiting a kn
 
 **Table of contents**
 
+- [In plain English](#in-plain-english)
 - [MERN stack](#mern-stack)
 - [Next.js](#nextjs)
 - [Django](#django)
+
+---
+
+## In plain English
+
+The big picture before the jargon. The real skill here isn't memorising exploits — it's **recognising a stack from its signals, then knowing which kind of bug to look up.** One hook per stack:
+
+| Stack | Spot it by | The bug, in one line |
+| --- | --- | --- |
+| **MERN** (Express) | `X-Powered-By: Express`, `connect.sid` cookie | Sloppy custom JavaScript merges your input into a **shared object** — change that one shared thing and *everything* copying from it becomes admin. |
+| **Next.js** | `X-Powered-By: Next.js`, `window.__next_f` | The app **trusts an internal header it shouldn't** — send it yourself and the login check is skipped. |
+| **Django** | `WSGIServer` server header, `csrfmiddlewaretoken` field | You get to **pick the sort column**, and it's pasted straight into SQL — so you rewrite the query and read the database. |
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>How to use these notes:</strong> don't try to recall the exact payloads from memory — nobody does that. These notes are your <em>lookup sheet</em>. Remember the one-line hook above; come back here for the commands when you need them.
+</div>
 
 ---
 
