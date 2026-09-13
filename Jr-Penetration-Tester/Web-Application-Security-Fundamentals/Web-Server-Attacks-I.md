@@ -9,6 +9,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 - [In plain English](#in-plain-english)
 - [Identifying web servers](#identifying-web-servers)
 - [Python HTTP server exposure](#python-http-server-exposure)
+- [Apache2](#apache2)
 
 ---
 
@@ -18,6 +19,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 | --- | --- | --- |
 | **Identifying web servers** | `Server` header, `X-Powered-By` header, default error pages | Every server **announces itself** somewhere — check the headers first; if those are hidden, the default error page usually gives it away instead. |
 | **Python HTTP server** | `python3 -m http.server` running anywhere reachable | It has **one mode: serve everything** in the folder — no auth, no hidden files, no exceptions. Finding it exposed isn't hacking, it's just reading what it was already handing out. |
+| **Apache2** | Version in `Server` header, `/server-status`, `.bak` files via Gobuster | Four checks catch most misconfigured Apache boxes: **read the version, browse anything that lists, visit `/server-status`, brute-force for files nothing links to.** |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> these are a lookup sheet, not something to memorise. Remember the one-line hook above; come back here for the exact commands when you need them.
@@ -160,3 +162,92 @@ cat backup-contents/db_dump.sql
 ### Why this matters
 
 There's no vulnerability to trigger here — the server is working exactly as designed. The finding *is* the misconfiguration: it's running where it shouldn't be, serving files that shouldn't be public. On a real engagement, documenting this means stating not just that the server exists, but exactly what it exposes and what an attacker could do with that.
+
+---
+
+## Apache2
+
+The most widely deployed web server in the world — it shows up in nearly every engagement touching web infrastructure. Ubuntu's default Apache configuration leaves several things enabled that testers routinely find and report. Four checks cover most of it.
+
+### 1. Version disclosure
+
+```bash
+curl -sI http://10.129.173.9:80 | grep -i server
+# -> Server: Apache/2.4.58 (Ubuntu)
+```
+
+Ubuntu's Apache defaults to `ServerTokens OS`, which includes the OS label alongside the version — enough to check for known CVEs and understand the server's capabilities.
+
+### 2. Directory listing
+
+The `Options +Indexes` directive makes Apache show a file listing whenever a directory has no `index.html`. Sometimes intentional (an internal file share), sometimes an accident on a path with sensitive data.
+
+```bash
+curl -s http://10.129.173.9/files/
+```
+
+A page titled `Index of /files` lists filenames, sizes, and last-modified dates for everything in that directory.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Tip:</strong> when you find a directory listing, read <em>every</em> file in it. CSV exports, internal notes, and backup files often end up in directories meant only for casual internal use.
+</div>
+
+### 3. The `mod_status` page
+
+Apache ships a built-in status page via `mod_status`. Correctly configured, it's reachable only from `localhost`; misconfigured with `Require all granted`, it's reachable from anywhere:
+
+```bash
+curl -s http://10.129.173.9:80/server-status
+```
+
+It shows active connections and the paths they're requesting, total requests served since startup, worker states (idle/writing/reading/closing), and the exact server version and start time — real-time information about other users' activity and internal paths, on top of confirming the version.
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Warning:</strong> <code>mod_status</code> ships <em>enabled</em> by default on Ubuntu with a <code>Require local</code> restriction in <code>conf-available/security.conf</code> — but a <code>Require all granted</code> directive placed anywhere in a virtual host config silently overrides that restriction. The module config itself never has to be touched. Always check <code>/server-status</code>, even on a server that looks like it's using safe defaults.
+</div>
+
+### 4. Finding unlinked files with Gobuster
+
+Backup files, old config copies, and forgotten test files often sit in the document root with nothing linking to them. Gobuster finds them by brute-forcing paths from a wordlist:
+
+```bash
+# -u  target URL
+# -w  wordlist path
+# -x  also try these extensions on every word
+gobuster dir -u http://TARGET_IP:80 \
+  -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt \
+  -x bak,txt,html -t 20
+```
+
+```
+/.htpasswd            (Status: 403) [Size: 275]
+/.htaccess            (Status: 403) [Size: 275]
+/backup.bak           (Status: 200) [Size: 178]
+/files                (Status: 301) [Size: 308] [--> http://10.129.173.9/files/]
+/server-status        (Status: 200) [Size: 17539]
+```
+
+A `.bak` file returning `200` is almost always worth pulling:
+
+```bash
+curl -s http://10.129.173.9:80/backup.bak
+```
+
+```
+# Apache config backup - DO NOT COMMIT
+ServerName company.internal
+DocumentRoot /var/www/html
+# DB credentials below
+# user: dbadmin pass: Backup2024!
+# Last updated: 2024-11-15
+```
+
+A `.htpasswd` file is worth just as much attention: Apache uses it to store usernames and **hashed** passwords for HTTP Basic Auth. Finding one exposed hands you a hash to crack offline, and confirms that some part of the site uses Basic Auth — telling you which paths are worth trying authenticated access on.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Tip:</strong> <code>common.txt</code> is large, and <code>-x</code> triples the requests (one per extension per word) — a full run can take several minutes against a remote target. Run without <code>-x</code> first to find live directories, then re-run with a targeted extension like <code>-x bak</code> once you know where to look.
+</div>
+
+### Putting it together
+
+The pattern is consistent across Apache targets: **check the version header → browse anything that lists a directory → visit `/server-status` → Gobuster for unlinked files.** These four steps cover the majority of what a misconfigured Apache server exposes.
