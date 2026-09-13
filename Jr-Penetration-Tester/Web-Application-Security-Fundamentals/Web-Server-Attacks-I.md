@@ -8,6 +8,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 
 - [In plain English](#in-plain-english)
 - [Identifying web servers](#identifying-web-servers)
+- [Python HTTP server exposure](#python-http-server-exposure)
 
 ---
 
@@ -16,6 +17,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 | Topic | Spot it by | Takeaway |
 | --- | --- | --- |
 | **Identifying web servers** | `Server` header, `X-Powered-By` header, default error pages | Every server **announces itself** somewhere — check the headers first; if those are hidden, the default error page usually gives it away instead. |
+| **Python HTTP server** | `python3 -m http.server` running anywhere reachable | It has **one mode: serve everything** in the folder — no auth, no hidden files, no exceptions. Finding it exposed isn't hacking, it's just reading what it was already handing out. |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> these are a lookup sheet, not something to memorise. Remember the one-line hook above; come back here for the exact commands when you need them.
@@ -99,3 +101,62 @@ Requesting a path that doesn't exist returns each server's **default 404 page**,
 | Apache | Server name in the page body |
 
 This is the fallback fingerprint for when the `Server` header has been suppressed — the error page format alone can still identify the software underneath.
+
+---
+
+## Python HTTP server exposure
+
+Python ships a built-in HTTP server anyone can start with one command:
+
+```bash
+# Serves the current working directory over HTTP on port 8000
+python3 -m http.server 8000
+```
+
+It's meant for quickly sharing files or testing a static site on a local network. The problem is it's **convenient enough to forget about** — left running on a public-facing box, an internal share, or a cloud instance where port 8000 got opened and never closed. There's no access control, no authentication, and no logging beyond whatever the OS captures.
+
+### What it serves
+
+Everything in the working directory — **including dotfiles** like `.env`. There's no `.htaccess` equivalent, no blocklist, no config file to restrict paths. Apache and Nginx disable directory listing by default and let admins restrict individual paths; Python's HTTP server has exactly one mode: **serve everything**.
+
+### Directory listing
+
+If the folder has no `index.html`, the server auto-generates an HTML page listing every file it can see:
+
+```bash
+curl -s http://10.129.173.9:8000/
+```
+
+Page title `Directory listing for /` confirms it — everything listed there is directly downloadable.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> if the root doesn't show a listing, an <code>index.html</code> is probably being served instead — try requesting a path directly, or browse into subdirectories.
+</div>
+
+### Accessing dotfiles
+
+Linux hides dotfiles from normal directory browsing by convention only — Python's HTTP server doesn't respect that convention and serves them like any other file. `.env` is a prime target since it commonly holds real credentials:
+
+```bash
+curl -s http://10.129.173.9:8000/.env
+```
+
+```
+SECRET_KEY=dev-secret-key-do-not-use
+DATABASE_URL=postgresql://webapp:S3cur3DBPass!@localhost/production
+DEBUG=True
+```
+
+### Downloading and inspecting archives
+
+A `.zip` or `.tar.gz` sitting in the listing is worth pulling down — developers sometimes leave backup archives in the same folder they're serving, containing source code, database dumps, or config files:
+
+```bash
+curl -s http://10.129.173.9:8000/backup.zip -o backup.zip
+unzip backup.zip -d backup-contents/
+cat backup-contents/db_dump.sql
+```
+
+### Why this matters
+
+There's no vulnerability to trigger here — the server is working exactly as designed. The finding *is* the misconfiguration: it's running where it shouldn't be, serving files that shouldn't be public. On a real engagement, documenting this means stating not just that the server exists, but exactly what it exposes and what an attacker could do with that.
