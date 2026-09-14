@@ -11,6 +11,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 - [Python HTTP server exposure](#python-http-server-exposure)
 - [Apache2](#apache2)
 - [Node.js / Express](#nodejs--express)
+- [Nginx](#nginx)
 
 ---
 
@@ -22,6 +23,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 | **Python HTTP server** | `python3 -m http.server` running anywhere reachable | It has **one mode: serve everything** in the folder — no auth, no hidden files, no exceptions. Finding it exposed isn't hacking, it's just reading what it was already handing out. |
 | **Apache2** | Version in `Server` header, `/server-status`, `.bak` files via Gobuster | Four checks catch most misconfigured Apache boxes: **read the version, browse anything that lists, visit `/server-status`, brute-force for files nothing links to.** |
 | **Node.js / Express** | `X-Powered-By: Express`, JSON responses, debug endpoints | The app is **code, not files** — and developers ship it with the debugging left on, so it happily **tells you its own routes, its stack traces, and its secrets** if you just ask. |
+| **Nginx** | `Server: nginx/x`, `autoindex` listings, `/nginx_status` | Same three checks as Apache, **different vocabulary** (`server_tokens`, `autoindex`, `stub_status`). It usually sits out front as a reverse proxy, so what it leaks hints at the internal setup behind it. |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> these are a lookup sheet, not something to memorise. Remember the one-line hook above; come back here for the exact commands when you need them.
@@ -358,3 +360,105 @@ Config files served as static assets are easy to overlook because they're *techn
 ### Putting it together
 
 Each step narrows the scope for the next: **headers** confirm the framework → **errors** reveal the internals → **debug endpoints** enumerate the routes → **env vars** expose credentials → **static files** show what the developers assumed was safe to expose. The chain works because every finding points you at where to look next.
+
+---
+
+## Nginx
+
+Nginx occupies a different space from Apache and Node. It's most often a **reverse proxy, load balancer, or high-performance static file server** — in production it usually sits *in front of* an application server and handles public-facing traffic. That front-line positioning is what makes its configuration matter: a misconfigured instance can expose internal structure, reveal operational data, or serve files it shouldn't.
+
+The misconfiguration categories are the **same three as Apache** — version disclosure, directory listing, exposed status page — just with Nginx's own directive vocabulary.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> in this lab Nginx runs on port <strong>8080</strong> because Apache already holds port 80 on the same machine. In a real deployment Nginx would typically be on port 80 or 443.
+</div>
+
+### 1. Version disclosure
+
+```bash
+curl -sI http://10.130.184.217:8080 | grep -i server
+# -> Server: nginx/1.24.0 (Ubuntu)
+```
+
+Nginx exposes its version in the `Server` header by default. Where Apache uses `ServerTokens`, Nginx uses **`server_tokens`** (default `on`). That one directive controls *both* the `Server` header and the version string in default error pages — set `server_tokens off` and it's suppressed in both places at once. So if the header is missing, a `404` reveals whether it's genuinely off or only half-configured:
+
+```bash
+curl -s http://10.130.184.217:8080/nonexistent-path
+```
+
+```html
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.24.0 (Ubuntu)</center>
+</body>
+</html>
+```
+
+### 2. Directory listing with `autoindex`
+
+Nginx does **not** list directories by default. A developer enables it by adding `autoindex on` to a location block:
+
+```nginx
+location /files/ {
+    autoindex on;
+    root /var/www/nginx/;
+}
+```
+
+Legitimate for file-sharing setups — a misconfiguration only when it's on a path holding sensitive files, or left on in production without access controls.
+
+```bash
+curl -s http://10.130.184.217:8080/files/
+```
+
+```html
+<h1>Index of /files/</h1><hr><pre><a href="../">../</a>
+<a href="deploy-notes.txt">deploy-notes.txt</a>        03-Apr-2026 18:23    148
+<a href="old-backup.tar.gz">old-backup.tar.gz</a>       03-Apr-2026 18:23    236
+<a href="server-config.txt">server-config.txt</a>       03-Apr-2026 18:23    135
+</pre><hr>
+```
+
+Nginx's autoindex format is a simple filename / date / size table. Read every file listed — these paths are often configured as shared storage and then filled with operational data.
+
+### 3. The `nginx_status` endpoint
+
+Nginx's **`stub_status`** module exposes real-time connection metrics at a configurable URL. Secure config restricts it to localhost; the misconfigured version allows any IP:
+
+```nginx
+location /nginx_status {
+    stub_status;
+    allow all;   # Should be: allow 127.0.0.1; deny all;
+}
+```
+
+```bash
+curl -s http://10.130.184.217:8080/nginx_status
+```
+
+```
+Active connections: 1
+server accepts handled requests
+ 15 15 15
+Reading: 0 Writing: 1 Waiting: 0
+```
+
+The compact, unlabeled output reads as:
+
+| Line | Meaning |
+| --- | --- |
+| `Active connections` | Connections open right now |
+| `15 15 15` | Totals since startup: **accepted**, **handled**, **requests** (in that order) |
+| `Reading / Writing / Waiting` | Current active connections broken down by state |
+
+Not directly exploitable, but it leaks server load and usage patterns — and on a real engagement it's a finding because it confirms the internal monitoring setup and hints that other monitoring endpoints may be similarly exposed.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Tip:</strong> Nginx config lives in <code>/etc/nginx/</code> on Ubuntu. With shell access, reading <code>/etc/nginx/sites-available/</code> shows you exactly which directories are exposed and which modules are enabled.
+</div>
+
+### Putting it together
+
+Parallel structure to the Apache investigation — **check the version header → browse any `autoindex` directory → hit the status endpoint.** The paths and directives differ (`server_tokens`, `autoindex`, `stub_status`), but the investigative approach is identical.
