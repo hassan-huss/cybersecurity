@@ -10,6 +10,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 - [Identifying web servers](#identifying-web-servers)
 - [Python HTTP server exposure](#python-http-server-exposure)
 - [Apache2](#apache2)
+- [Node.js / Express](#nodejs--express)
 
 ---
 
@@ -20,6 +21,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 | **Identifying web servers** | `Server` header, `X-Powered-By` header, default error pages | Every server **announces itself** somewhere — check the headers first; if those are hidden, the default error page usually gives it away instead. |
 | **Python HTTP server** | `python3 -m http.server` running anywhere reachable | It has **one mode: serve everything** in the folder — no auth, no hidden files, no exceptions. Finding it exposed isn't hacking, it's just reading what it was already handing out. |
 | **Apache2** | Version in `Server` header, `/server-status`, `.bak` files via Gobuster | Four checks catch most misconfigured Apache boxes: **read the version, browse anything that lists, visit `/server-status`, brute-force for files nothing links to.** |
+| **Node.js / Express** | `X-Powered-By: Express`, JSON responses, debug endpoints | The app is **code, not files** — and developers ship it with the debugging left on, so it happily **tells you its own routes, its stack traces, and its secrets** if you just ask. |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> these are a lookup sheet, not something to memorise. Remember the one-line hook above; come back here for the exact commands when you need them.
@@ -251,3 +253,108 @@ A `.htpasswd` file is worth just as much attention: Apache uses it to store user
 ### Putting it together
 
 The pattern is consistent across Apache targets: **check the version header → browse anything that lists a directory → visit `/server-status` → Gobuster for unlinked files.** These four steps cover the majority of what a misconfigured Apache server exposes.
+
+---
+
+## Node.js / Express
+
+Node apps behave differently from Apache and the Python server. They aren't serving static files from a document root — they run **application code** that decides what to return for every request. That flexibility is powerful, and it's exactly where mistakes creep in.
+
+The recurring theme: **development-mode features left enabled in production.** Debug endpoints, verbose errors, and exposed environment variables all come from the same habit — code that worked in dev went live as-is. The result is an app that tells you how it's built and, sometimes, what credentials it uses.
+
+### 1. Framework fingerprinting
+
+```bash
+curl -sI http://MACHINE_IP:3000
+# -> X-Powered-By: Express
+```
+
+Express sets `X-Powered-By: Express` automatically unless the developer explicitly disables it. That confirms the framework and tells you what to look for next.
+
+### 2. Reading the application version
+
+Many Express apps return a JSON status response at the root:
+
+```bash
+curl -s http://MACHINE_IP:3000
+# -> {"status":"ok","app":"company-portal","version":"1.2.0"}
+```
+
+Note any `version` field — matching it against known CVEs or changelogs can surface useful leads.
+
+### 3. Triggering verbose errors
+
+Express's built-in error handler hides stack traces when `NODE_ENV=production`. But developers often write **custom** error handlers that leak traces regardless of `NODE_ENV` — so a `production` setting only protects you if nothing overrides the default handler. Hit an endpoint that will fail:
+
+```bash
+curl -s http://MACHINE_IP:3000/api/users | python3 -m json.tool
+```
+
+```json
+{
+    "error": "connect ECONNREFUSED 127.0.0.1:5432",
+    "stack": "Error: connect ECONNREFUSED 127.0.0.1:5432\n    at /opt/nodeapp/app.js:16:15\n    at Layer.handle ...",
+    "query": "SELECT * FROM users"
+}
+```
+
+A `500` from an API endpoint is worth chasing. The **stack trace** is the prize: it leaks internal file paths (`/opt/nodeapp/app.js`), module names, and sometimes the exact database query that failed — internals a bare status code would never reveal.
+
+### 4. Enumerating routes via debug endpoints
+
+One of the most useful things a misconfigured Express app can do is hand you a list of all its own routes. Developers build a debug endpoint for convenience during development, then forget to remove it:
+
+```bash
+curl -s http://MACHINE_IP:3000/api/routes
+```
+
+```json
+[{"method":"GET","path":"/"},{"method":"GET","path":"/api/users"},
+ {"method":"GET","path":"/api/routes"},{"method":"GET","path":"/api/debug/env"}]
+```
+
+This shows every path the app handles up front — no Gobuster guessing needed.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> a route-lister works by reading Express's internal <code>app._router.stack</code>. That's an internal property whose shape changes between Express versions — Express 5 reworked the router internals enough to break Express-4-style implementations. If a route endpoint returns an odd format or errors out, the target may be on a different Express version than this lab.
+</div>
+
+### 5. Exposed environment variables
+
+Env vars in Node apps often hold DB credentials, API keys, and config flags. A debug endpoint that returns `process.env` is a major finding:
+
+```bash
+curl -s http://MACHINE_IP:3000/api/debug/env
+```
+
+```json
+{"NODE_ENV":"development","DB_PASSWORD":"NodeDBPass2024!","PORT":"3000",
+ "DB_HOST":"localhost:5432","APP_NAME":"company-portal"}
+```
+
+Document any `DB_PASSWORD`, `SECRET_KEY`, etc. The `NODE_ENV` value is telling in itself: `development` on a production box signals the app was deployed without hardening.
+
+### 6. Static file serving
+
+Express commonly uses `express.static()` to serve front-end assets. Client-side JavaScript often embeds API URLs, internal hostnames, or debug flags as constants. Once you know the routes, check what's served statically:
+
+```bash
+curl -s http://MACHINE_IP:3000/static/config.js
+```
+
+```javascript
+// Client-side configuration
+const API_BASE = 'http://internal-api.company.local:8080';
+const DEBUG = true;
+const VERSION = '1.2.0';
+```
+
+Config files served as static assets are easy to overlook because they're *technically* meant to be public (the browser needs them) — but "meant to be public" isn't the same as "contains only public information."
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Warning:</strong> <code>express.static()</code> returns a silent <code>404</code> for dotfiles (files starting with <code>.</code>) by default — the <em>opposite</em> of Python's HTTP server, which serves them freely. A <code>404</code> on <code>.env</code> over an Express static route doesn't mean the file is absent; the middleware is blocking it. You'd need shell access or a different route to reach it.
+</div>
+
+### Putting it together
+
+Each step narrows the scope for the next: **headers** confirm the framework → **errors** reveal the internals → **debug endpoints** enumerate the routes → **env vars** expose credentials → **static files** show what the developers assumed was safe to expose. The chain works because every finding points you at where to look next.
