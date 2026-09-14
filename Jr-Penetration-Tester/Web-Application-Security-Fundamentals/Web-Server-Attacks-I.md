@@ -12,6 +12,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 - [Apache2](#apache2)
 - [Node.js / Express](#nodejs--express)
 - [Nginx](#nginx)
+- [Cross-cutting patterns](#cross-cutting-patterns)
 
 ---
 
@@ -24,6 +25,7 @@ Fingerprinting and attacking web server software directly — Apache, Nginx, Pyt
 | **Apache2** | Version in `Server` header, `/server-status`, `.bak` files via Gobuster | Four checks catch most misconfigured Apache boxes: **read the version, browse anything that lists, visit `/server-status`, brute-force for files nothing links to.** |
 | **Node.js / Express** | `X-Powered-By: Express`, JSON responses, debug endpoints | The app is **code, not files** — and developers ship it with the debugging left on, so it happily **tells you its own routes, its stack traces, and its secrets** if you just ask. |
 | **Nginx** | `Server: nginx/x`, `autoindex` listings, `/nginx_status` | Same three checks as Apache, **different vocabulary** (`server_tokens`, `autoindex`, `stub_status`). It usually sits out front as a reverse proxy, so what it leaks hints at the internal setup behind it. |
+| **Cross-cutting patterns** | Missing security headers, Nikto scans | The same handful of mistakes show up on **every** server, because defaults favour easy deployment over security. Finding them isn't negligence — it means **nobody reviewed the defaults.** |
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
 <strong>How to use these notes:</strong> these are a lookup sheet, not something to memorise. Remember the one-line hook above; come back here for the exact commands when you need them.
@@ -462,3 +464,72 @@ Not directly exploitable, but it leaks server load and usage patterns — and on
 ### Putting it together
 
 Parallel structure to the Apache investigation — **check the version header → browse any `autoindex` directory → hit the status endpoint.** The paths and directives differ (`server_tokens`, `autoindex`, `stub_status`), but the investigative approach is identical.
+
+---
+
+## Cross-cutting patterns
+
+Beyond each server's own quirks, some findings appear **regardless of which server is running**. Two are especially consistent: missing security headers, and whatever an automated scanner surfaces in seconds.
+
+### Security headers
+
+Security headers are HTTP response headers that tell the browser how to handle the page — defending against clickjacking, MIME sniffing, and XSS. **None** of the four lab servers sends them, which is the default state for all of them: security headers require active configuration and are never present by default.
+
+| Header | Protects against | Example value |
+| --- | --- | --- |
+| `X-Frame-Options` | Clickjacking (page embedded in an iframe on another domain) | `DENY` or `SAMEORIGIN` |
+| `X-Content-Type-Options` | MIME sniffing (browser guessing content types) | `nosniff` |
+| `Content-Security-Policy` | Restricts where scripts, styles, and other resources may load from | `default-src 'self'` |
+| `Referrer-Policy` | Controls what's sent in the `Referer` header on navigation | `no-referrer` / `strict-origin` |
+| `Strict-Transport-Security` | Forces HTTPS on later requests (HTTPS only) | `max-age=31536000` |
+
+Audit all four ports in one loop:
+
+```bash
+for port in 80 8000 3000 8080; do
+  echo "=== Port $port ===";
+  curl -sI http://10.130.184.217:$port/ \
+    | grep -iE "x-frame-options|x-content-type|content-security-policy|strict-transport|referrer-policy" \
+    || echo "(no security headers found)";
+done
+```
+
+No `grep` output = none of those headers present.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Info:</strong> <code>X-Frame-Options</code> is technically superseded by <code>Content-Security-Policy: frame-ancestors</code>, which is finer-grained. A hardened modern site may handle clickjacking through CSP alone and deliberately omit <code>X-Frame-Options</code> — so when writing findings, check for <em>both</em> before flagging it missing. Separately, <code>Strict-Transport-Security</code> only applies over HTTPS; its absence on this HTTP lab is expected, not a real misconfiguration.
+</div>
+
+### Automated scanning with Nikto
+
+Nikto checks for known misconfigurations, outdated software, exposed admin interfaces, and missing security headers. It's **loud** — it generates a lot of traffic and is easy to detect — so it's for authorised testing, not stealth.
+
+```bash
+nikto -h http://10.130.184.217:80 -nointeractive
+```
+
+`-nointeractive` suppresses prompts so the scan runs unattended. Findings are the lines starting with `+`. On the misconfigured Apache box, expect it to flag:
+
+- the exposed `/server-status` page (`OSVDB-561`)
+- directory indexing on `/files/` (`OSVDB-3268`)
+- the ETag inode leak
+- the missing `X-Frame-Options` header
+- (and it points you at `backup.bak` in the document root)
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Tip:</strong> Nikto is verbose. <code>-Tuning</code> restricts which checks run — <code>nikto -h TARGET -Tuning 123</code> covers the most common findings without the full signature set. Tuning codes are <strong>concatenated, not comma-separated</strong> (<code>123</code>, not <code>1,2,3</code>).
+</div>
+
+### The patterns that apply everywhere
+
+The same categories of misconfiguration recur across all four servers:
+
+| Misconfiguration | Apache | Python HTTP | Node.js | Nginx |
+| --- | --- | --- | --- | --- |
+| Version disclosure in headers | Yes | Yes | Partial | Yes |
+| Directory listing | `/files/` | Root path | N/A | `/files/` |
+| Exposed status / debug endpoint | `/server-status` | N/A | `/api/debug/env`, `/api/routes` | `/nginx_status` |
+| Sensitive files accessible | `backup.bak`, `internal-notes.txt` | `.env`, `notes.txt`, `backup.zip` | `config.js` | `server-config.txt`, `deploy-notes.txt` |
+| Missing security headers | All | All | All | All |
+
+The consistent thread: **default configurations prioritise ease of deployment over security.** Version disclosure, directory listings, and status pages are on by default for diagnostics — they make the admin's job easier, and turning them off takes deliberate action. Finding these in a real engagement doesn't signal negligence; it signals that **the default settings were never reviewed.**
