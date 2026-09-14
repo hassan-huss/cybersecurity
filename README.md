@@ -42,7 +42,7 @@ Jr-Penetration-Tester/
 | --- | --- |
 | **Network Reconnaissance** | Active vs. passive recon methodology |
 | **nmap** | Host discovery, basic/advanced port scanning, post-scan analysis |
-| **Web Application Security Fundamentals** | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each |
+| **Web Application Security Fundamentals** | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
 
 More modules and rooms are added as the path progresses.
 
@@ -60,15 +60,13 @@ Every room file follows the same visual format so notes stay easy to scan:
 
 ## 📈 Progress
 
-**Current room:** *Web Application Security Fundamentals → Modern Web Stacks*
-Fingerprint a stack from passive HTTP signals, then exploit one real CVE per stack.
+Recent rooms under **Web Application Security Fundamentals**:
 
-| Stack | CVE / bug | Status |
+| Room | Focus | Status |
 | --- | --- | --- |
-| MERN (Express) | Prototype pollution via unfiltered object merge | ✅ Done |
-| Next.js | CVE-2025-29927 (middleware auth bypass) | ✅ Done |
-| Django | CVE-2021-35042 (`order_by()` SQL injection) | ✅ Done |
-| LAMP (Apache 2.4.49) | CVE-2021-41773 (path traversal → `mod_cgi` RCE) | ✅ Done |
+| Modern Web Stacks | Fingerprint a stack from HTTP signals, exploit one CVE each (MERN, Next.js, Django, LAMP) + Nikto | ✅ Done |
+| Web Server Attacks - I | Attack the server software itself — Apache, Nginx, Python HTTP server, Node/Express | ✅ Done |
+| Web Server Attacks - II | The IIS / Windows Server attack chain: fingerprinting → tilde enumeration → WebDAV shell upload → ASPX shells → misconfigurations | ✅ Done |
 
 ---
 

@@ -2,6 +2,8 @@
 
 Fingerprinting and attacking web server software directly — Apache, Nginx, Python's built-in HTTP server, and Node/Express — using response headers, default error pages, and known misconfigurations per server.
 
+> Followed by [Web Server Attacks - II](Web-Server-Attacks-II.md), which covers the IIS / Windows Server attack chain.
+
 ---
 
 **Table of contents**
