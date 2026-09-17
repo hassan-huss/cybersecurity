@@ -29,22 +29,26 @@ This is **not** a copy-paste of TryHackMe's room text. Every file here is a **co
 
 ## 🗂️ Structure
 
-Notes are organized by **certification path → module → room**, one Markdown file per room:
+Notes are organized by **platform → certification path/topic → module → room/lab**, one Markdown file per room or lab:
 
 ```
-Jr-Penetration-Tester/
-├── Network-Reconnaissance/
-├── nmap/
-└── Web-Application-Security-Fundamentals/
+TryHackMe/
+└── Jr-Penetration-Tester/
+    ├── Network-Reconnaissance/
+    ├── nmap/
+    └── Web-Application-Security-Fundamentals/
+Web-Security-Academy/
+└── SQL-Injection/
 ```
 
-| Module | What it covers |
-| --- | --- |
-| **Network Reconnaissance** | Active vs. passive recon methodology |
-| **nmap** | Host discovery, basic/advanced port scanning, post-scan analysis |
-| **Web Application Security Fundamentals** | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
+| Platform | Path/Topic | What it covers |
+| --- | --- | --- |
+| **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
+| **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
+| **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
+| **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
-More modules and rooms are added as the path progresses.
+More platforms, paths, and rooms/labs are added as I progress.
 
 ## ✍️ How a note is written
 
