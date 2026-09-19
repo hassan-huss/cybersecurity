@@ -10,3 +10,6 @@ Notes for PortSwigger Web Security Academy's **SQL injection** learning path. La
 | Examining the database | [Examining-the-database.md](Examining-the-database.md) |
 | Blind SQL injection (overview) | [Blind-SQL-injection.md](Blind-SQL-injection.md) |
 | Exploiting blind SQLi via conditional responses | [Exploiting-blind-SQLi-conditional-responses.md](Exploiting-blind-SQLi-conditional-responses.md) |
+| Error-based SQL injection (overview) | [Error-based-SQL-injection.md](Error-based-SQL-injection.md) |
+| Exploiting blind SQLi via conditional errors | [Exploiting-blind-SQLi-conditional-errors.md](Exploiting-blind-SQLi-conditional-errors.md) |
+| Extracting data via verbose SQL error messages | [Extracting-data-via-verbose-SQL-error-messages.md](Extracting-data-via-verbose-SQL-error-messages.md) |
