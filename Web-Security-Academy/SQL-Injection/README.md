@@ -6,6 +6,7 @@ Notes for PortSwigger Web Security Academy's **SQL injection** learning path. La
 
 | Topic | Notes |
 | --- | --- |
+| SQL injection UNION attacks | [SQL-injection-UNION-attacks.md](SQL-injection-UNION-attacks.md) |
 | Retrieving multiple values within a single column | [Retrieving-multiple-values-in-a-single-column.md](Retrieving-multiple-values-in-a-single-column.md) |
 | Examining the database | [Examining-the-database.md](Examining-the-database.md) |
 | Blind SQL injection (overview) | [Blind-SQL-injection.md](Blind-SQL-injection.md) |
@@ -18,3 +19,4 @@ Notes for PortSwigger Web Security Academy's **SQL injection** learning path. La
 | SQL injection in different contexts (JSON/XML, WAF bypass) | [SQL-injection-in-different-contexts.md](SQL-injection-in-different-contexts.md) |
 | Second-order (stored) SQL injection | [Second-order-SQL-injection.md](Second-order-SQL-injection.md) |
 | How to prevent SQL injection | [Preventing-SQL-injection.md](Preventing-SQL-injection.md) |
+| SQL injection cheat sheet (per-database syntax) | [SQL-injection-cheat-sheet.md](SQL-injection-cheat-sheet.md) |
