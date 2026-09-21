@@ -6,60 +6,71 @@ The notes in this folder, listed in the **order they were studied**, following t
 
 ---
 
-## 1 · Examining the database
+## 1 · Fundamentals
+
+Start here — what SQLi is, its impact, where it occurs, and how to find it.
+
+| # | Topic | Notes |
+| --- | --- | --- |
+| 1 | SQL injection fundamentals (what/impact/where + hidden data & login bypass) | [SQL-injection-fundamentals.md](SQL-injection-fundamentals.md) |
+| 2 | Detecting SQL injection | [Detecting-SQL-injection.md](Detecting-SQL-injection.md) |
+
+---
+
+## 2 · Examining the database
 
 Groundwork — fingerprint the DB and enumerate its structure before attacking.
 
 | # | Topic | Notes |
 | --- | --- | --- |
-| 1 | Examining the database (type/version + listing tables & columns) | [Examining-the-database.md](Examining-the-database.md) |
+| 3 | Examining the database (type/version + listing tables & columns) | [Examining-the-database.md](Examining-the-database.md) |
 
 ---
 
-## 2 · UNION attacks (in-band exfiltration)
+## 3 · UNION attacks (in-band exfiltration)
 
 When query results are reflected in the response.
 
 | # | Topic | Notes |
 | --- | --- | --- |
-| 2 | SQL injection UNION attacks (column count → text column → retrieve data) | [SQL-injection-UNION-attacks.md](SQL-injection-UNION-attacks.md) |
-| 3 | Retrieving multiple values within a single column | [Retrieving-multiple-values-in-a-single-column.md](Retrieving-multiple-values-in-a-single-column.md) |
+| 4 | SQL injection UNION attacks (column count → text column → retrieve data) | [SQL-injection-UNION-attacks.md](SQL-injection-UNION-attacks.md) |
+| 5 | Retrieving multiple values within a single column | [Retrieving-multiple-values-in-a-single-column.md](Retrieving-multiple-values-in-a-single-column.md) |
 
 ---
 
-## 3 · Blind SQL injection
+## 4 · Blind SQL injection
 
 When results and errors are **not** returned — infer data indirectly.
 
 | # | Topic | Notes |
 | --- | --- | --- |
-| 4 | Blind SQL injection (overview) | [Blind-SQL-injection.md](Blind-SQL-injection.md) |
-| 5 | Exploiting blind SQLi via conditional responses | [Exploiting-blind-SQLi-conditional-responses.md](Exploiting-blind-SQLi-conditional-responses.md) |
-| 6 | Error-based SQL injection (overview) | [Error-based-SQL-injection.md](Error-based-SQL-injection.md) |
-| 7 | Exploiting blind SQLi via conditional errors | [Exploiting-blind-SQLi-conditional-errors.md](Exploiting-blind-SQLi-conditional-errors.md) |
-| 8 | Extracting data via verbose SQL error messages | [Extracting-data-via-verbose-SQL-error-messages.md](Extracting-data-via-verbose-SQL-error-messages.md) |
-| 9 | Exploiting blind SQLi via time delays | [Exploiting-blind-SQLi-time-delays.md](Exploiting-blind-SQLi-time-delays.md) |
-| 10 | Exploiting blind SQLi via out-of-band (OAST) | [Exploiting-blind-SQLi-out-of-band-OAST.md](Exploiting-blind-SQLi-out-of-band-OAST.md) |
+| 6 | Blind SQL injection (overview) | [Blind-SQL-injection.md](Blind-SQL-injection.md) |
+| 7 | Exploiting blind SQLi via conditional responses | [Exploiting-blind-SQLi-conditional-responses.md](Exploiting-blind-SQLi-conditional-responses.md) |
+| 8 | Error-based SQL injection (overview) | [Error-based-SQL-injection.md](Error-based-SQL-injection.md) |
+| 9 | Exploiting blind SQLi via conditional errors | [Exploiting-blind-SQLi-conditional-errors.md](Exploiting-blind-SQLi-conditional-errors.md) |
+| 10 | Extracting data via verbose SQL error messages | [Extracting-data-via-verbose-SQL-error-messages.md](Extracting-data-via-verbose-SQL-error-messages.md) |
+| 11 | Exploiting blind SQLi via time delays | [Exploiting-blind-SQLi-time-delays.md](Exploiting-blind-SQLi-time-delays.md) |
+| 12 | Exploiting blind SQLi via out-of-band (OAST) | [Exploiting-blind-SQLi-out-of-band-OAST.md](Exploiting-blind-SQLi-out-of-band-OAST.md) |
 
 ---
 
-## 4 · Advanced contexts
+## 5 · Advanced contexts
 
 Injection points and patterns beyond the query string.
 
 | # | Topic | Notes |
 | --- | --- | --- |
-| 11 | SQL injection in different contexts (JSON/XML input, WAF bypass) | [SQL-injection-in-different-contexts.md](SQL-injection-in-different-contexts.md) |
-| 12 | Second-order (stored) SQL injection | [Second-order-SQL-injection.md](Second-order-SQL-injection.md) |
+| 13 | SQL injection in different contexts (JSON/XML input, WAF bypass) | [SQL-injection-in-different-contexts.md](SQL-injection-in-different-contexts.md) |
+| 14 | Second-order (stored) SQL injection | [Second-order-SQL-injection.md](Second-order-SQL-injection.md) |
 
 ---
 
-## 5 · Defence & reference
+## 6 · Defence & reference
 
 | # | Topic | Notes |
 | --- | --- | --- |
-| 13 | How to prevent SQL injection | [Preventing-SQL-injection.md](Preventing-SQL-injection.md) |
-| 14 | SQL injection cheat sheet (per-database syntax) | [SQL-injection-cheat-sheet.md](SQL-injection-cheat-sheet.md) |
+| 15 | How to prevent SQL injection | [Preventing-SQL-injection.md](Preventing-SQL-injection.md) |
+| 16 | SQL injection cheat sheet (per-database syntax) | [SQL-injection-cheat-sheet.md](SQL-injection-cheat-sheet.md) |
 
 ---
 

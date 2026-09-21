@@ -8,6 +8,8 @@ Notes for PortSwigger Web Security Academy's **SQL injection** learning path. La
 
 | Topic | Notes |
 | --- | --- |
+| SQL injection fundamentals (what/impact/where + hidden data & login bypass) | [SQL-injection-fundamentals.md](SQL-injection-fundamentals.md) |
+| Detecting SQL injection | [Detecting-SQL-injection.md](Detecting-SQL-injection.md) |
 | SQL injection UNION attacks | [SQL-injection-UNION-attacks.md](SQL-injection-UNION-attacks.md) |
 | Retrieving multiple values within a single column | [Retrieving-multiple-values-in-a-single-column.md](Retrieving-multiple-values-in-a-single-column.md) |
 | Examining the database | [Examining-the-database.md](Examining-the-database.md) |
