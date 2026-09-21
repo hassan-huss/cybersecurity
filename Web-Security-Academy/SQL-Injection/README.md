@@ -15,3 +15,6 @@ Notes for PortSwigger Web Security Academy's **SQL injection** learning path. La
 | Extracting data via verbose SQL error messages | [Extracting-data-via-verbose-SQL-error-messages.md](Extracting-data-via-verbose-SQL-error-messages.md) |
 | Exploiting blind SQLi via time delays | [Exploiting-blind-SQLi-time-delays.md](Exploiting-blind-SQLi-time-delays.md) |
 | Exploiting blind SQLi via out-of-band (OAST) | [Exploiting-blind-SQLi-out-of-band-OAST.md](Exploiting-blind-SQLi-out-of-band-OAST.md) |
+| SQL injection in different contexts (JSON/XML, WAF bypass) | [SQL-injection-in-different-contexts.md](SQL-injection-in-different-contexts.md) |
+| Second-order (stored) SQL injection | [Second-order-SQL-injection.md](Second-order-SQL-injection.md) |
+| How to prevent SQL injection | [Preventing-SQL-injection.md](Preventing-SQL-injection.md) |
