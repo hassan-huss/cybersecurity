@@ -33,10 +33,12 @@ Notes are organized by **platform → certification path/topic → module → ro
 
 ```
 TryHackMe/
-└── Jr-Penetration-Tester/
-    ├── Network-Reconnaissance/
-    ├── nmap/
-    └── Web-Application-Security-Fundamentals/
+├── Jr-Penetration-Tester/
+│   ├── Network-Reconnaissance/
+│   ├── nmap/
+│   └── Web-Application-Security-Fundamentals/
+└── THM-Independent-Labs/
+    └── SQLi/
 Web-Security-Academy/
 └── SQL-Injection/
 ```
@@ -46,6 +48,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
+| **TryHackMe** | THM Independent Labs | Standalone rooms outside a single path — starting with a hands-on SQL injection lab (login bypass, UNION, blind, second-order) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
 More platforms, paths, and rooms/labs are added as I progress.
@@ -71,6 +74,11 @@ Recent rooms under **Web Application Security Fundamentals**:
 | Modern Web Stacks | Fingerprint a stack from HTTP signals, exploit one CVE each (MERN, Next.js, Django, LAMP) + Nikto | ✅ Done |
 | Web Server Attacks - I | Attack the server software itself — Apache, Nginx, Python HTTP server, Node/Express | ✅ Done |
 | Web Server Attacks - II | The IIS / Windows Server attack chain: fingerprinting → tilde enumeration → WebDAV shell upload → ASPX shells → misconfigurations | ✅ Done |
+
+Standalone rooms under **THM Independent Labs**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
 | SQL Injection Lab | Hands-on SQLi against a Flask/SQLite app: login bypass, `UNION` dumps, boolean-based blind, and two second-order injections + sqlmap tamper scripts | ✅ Done |
 
 ---
