@@ -38,8 +38,7 @@ TryHackMe/
 │   ├── nmap/
 │   └── Web-Application-Security-Fundamentals/
 └── Vulnerabilities/
-    ├── SQLi/
-    └── XSS.md
+    └── SQLi/
 Web-Security-Academy/
 └── SQL-Injection/
 ```
@@ -49,7 +48,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
-| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS |
+| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
 More platforms, paths, and rooms/labs are added as I progress.
