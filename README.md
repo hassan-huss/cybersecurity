@@ -71,6 +71,7 @@ Recent rooms under **Web Application Security Fundamentals**:
 | Modern Web Stacks | Fingerprint a stack from HTTP signals, exploit one CVE each (MERN, Next.js, Django, LAMP) + Nikto | ✅ Done |
 | Web Server Attacks - I | Attack the server software itself — Apache, Nginx, Python HTTP server, Node/Express | ✅ Done |
 | Web Server Attacks - II | The IIS / Windows Server attack chain: fingerprinting → tilde enumeration → WebDAV shell upload → ASPX shells → misconfigurations | ✅ Done |
+| SQL Injection Lab | Hands-on SQLi against a Flask/SQLite app: login bypass, `UNION` dumps, boolean-based blind, and two second-order injections + sqlmap tamper scripts | ✅ Done |
 
 ---
 
