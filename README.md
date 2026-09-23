@@ -39,7 +39,7 @@ TryHackMe/
 │   └── Web-Application-Security-Fundamentals/
 └── Vulnerabilities/
     ├── SQLi/
-    └── XSS.md
+    └── XSS/
 Web-Security-Academy/
 └── SQL-Injection/
 ```

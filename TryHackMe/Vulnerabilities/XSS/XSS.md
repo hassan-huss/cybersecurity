@@ -4,7 +4,7 @@ Getting the victim's **browser** to run attacker-supplied JavaScript in the cont
 
 > This is the **TryHackMe "Cross-Site Scripting" room**. Scenario: pentest an internal web app with a public comments section, a user dashboard, and a news search — find the XSS before it's used for data exfiltration. Labs use "Atlas News" (Flask) and "Acme IT Support".
 >
-> 🔗 Sibling lab in this folder: [SQLi](SQLi/SQL-Injection-Lab.md). Where SQLi attacks the **database**, XSS attacks the **other users' browsers**.
+> 🔗 Sibling lab: [SQLi](../SQLi/SQL-Injection-Lab.md). Where SQLi attacks the **database**, XSS attacks the **other users' browsers**.
 
 ---
 
