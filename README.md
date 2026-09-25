@@ -88,7 +88,7 @@ Rooms under **Web Application Vulnerabilities II**:
 | Broken Authentication | Username enumeration + brute force with ffuf, a password-reset parameter-pollution logic flaw, and plain/hashed/base64 cookie manipulation — plus mitigations | ✅ Done |
 | File Inclusion | Path traversal (reading files outside the web root), LFI → RCE, filter bypasses (null byte, `....//`, forced-prefix), RFI via `allow_url_fopen`, and testing every input channel (URL/cookie/POST) | ✅ Done |
 | Command Injection | Injecting OS commands via shell operators (`;` `&&` `\|`), verbose vs blind detection (time delay / write-to-file), Linux & Windows payloads, and remediation (server-side allowlisting, least privilege, why filters get bypassed) | ✅ Done |
-| API Pentesting | ⬜ Not started |
+| API Pentesting | RESTful fundamentals (methods, 401 vs 403, JWTs), then the OWASP API Top 10 headliners — BOLA/IDOR, broken authentication, excessive data exposure, mass assignment, rate limiting — and chaining them from customer to admin | ✅ Done |
 | Support (challenge) | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
