@@ -4,7 +4,7 @@ Tricking a web app into exposing — or **executing** — files it never meant t
 
 > This is the **TryHackMe "File Inclusion" room**. It covers why the bug happens, path traversal, LFI (with source and black-box), the common filter bypasses, RFI, a challenge set, and remediation.
 >
-> 🔗 Sibling labs in this folder: [SQLi](../SQLi/SQL-Injection-Lab.md), [XSS](../XSS/XSS.md), [SSRF](../SSRF/SSRF.md), [IDOR](../IDOR/IDOR.md). File inclusion and [SSRF](../SSRF/SSRF.md) both abuse *the server fetching something on your behalf* — SSRF fetches a URL, RFI fetches (and executes) a file.
+> 🔗 Same module (**Web Application Vulnerabilities II**): [Session Management](./Session-Management.md), [Broken Authentication](./Broken-Authentication.md). Related standalone labs: [SQLi](../../Vulnerabilities/SQLi/SQL-Injection-Lab.md), [XSS](../../Vulnerabilities/XSS/XSS.md), [SSRF](../../Vulnerabilities/SSRF/SSRF.md), [IDOR](../../Vulnerabilities/IDOR/IDOR.md). File inclusion and [SSRF](../../Vulnerabilities/SSRF/SSRF.md) both abuse *the server fetching something on your behalf* — SSRF fetches a URL, RFI fetches (and executes) a file.
 
 ---
 
@@ -239,5 +239,5 @@ The flag names literally spell out the lesson: **fixed-input, cookie, post** —
 - **Fix:** allowlist input to a fixed set (map a key → a path), disable remote-include + unused wrappers, hide errors, patch, and add a WAF as a layer — not a substitute — for secure code.
 
 <div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
-<strong>How this sits vs the others:</strong> file inclusion and <a href="../SSRF/SSRF.md">SSRF</a> both weaponise <em>the server fetching something for you</em> — SSRF aims a request at internal URLs/metadata; RFI aims an <code>include()</code> at a URL and gets code execution. <a href="../SQLi/SQL-Injection-Lab.md">SQLi</a> and <a href="../XSS/XSS.md">XSS</a> inject into a query/page; LFI/RFI inject into a <em>filesystem path</em>. All four share one root: unvalidated input crossing into a trusted context.
+<strong>How this sits vs the others:</strong> file inclusion and <a href="../../Vulnerabilities/SSRF/SSRF.md">SSRF</a> both weaponise <em>the server fetching something for you</em> — SSRF aims a request at internal URLs/metadata; RFI aims an <code>include()</code> at a URL and gets code execution. <a href="../../Vulnerabilities/SQLi/SQL-Injection-Lab.md">SQLi</a> and <a href="../../Vulnerabilities/XSS/XSS.md">XSS</a> inject into a query/page; LFI/RFI inject into a <em>filesystem path</em>. All four share one root: unvalidated input crossing into a trusted context.
 </div>

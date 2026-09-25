@@ -1,10 +1,10 @@
-# Authentication Bypass
+# Broken Authentication
 
-Reaching functionality that belongs to an account **without supplying that account's real credential**. You don't always steal a password or a session token — often you just exploit an assumption the developer made, or edit a value the server trusts without checking.
+Reaching functionality that belongs to an account **without supplying that account's real credential** — an *authentication bypass*. You don't always steal a password or a session token — often you just exploit an assumption the developer made, or edit a value the server trusts without checking.
 
-> This is the **TryHackMe "Authentication Bypass" room** (Jr. Penetration Tester → Authentication). It covers the four techniques that show up over and over in real testing: **username enumeration**, **credential brute force**, **logic flaws** in account recovery, and **cookie manipulation** — each against the Acme IT Support app, plus mitigations.
+> This is the **TryHackMe "Broken Authentication" room** (Jr. Penetration Tester → Web Application Vulnerabilities II). It covers the four techniques that show up over and over in real testing: **username enumeration**, **credential brute force**, **logic flaws** in account recovery, and **cookie manipulation** — each against the Acme IT Support app, plus mitigations.
 >
-> 🔗 Related notes: [Session Management](./Session-Management.md) (this is the attack side of session creation/tracking), [IDOR](../../Vulnerabilities/IDOR/IDOR.md) (cookie tampering to change *who the server thinks you are* is the authorisation cousin of IDOR).
+> 🔗 Same module (**Web Application Vulnerabilities II**): [Session Management](./Session-Management.md) (this is the attack side of session creation/tracking), [File Inclusion](./File-Inclusion.md). Related standalone lab: [IDOR](../../Vulnerabilities/IDOR/IDOR.md) (cookie tampering to change *who the server thinks you are* is the authorisation cousin of IDOR).
 
 ---
 

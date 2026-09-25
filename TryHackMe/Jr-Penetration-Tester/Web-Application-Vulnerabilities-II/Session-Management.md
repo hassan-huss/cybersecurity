@@ -2,9 +2,9 @@
 
 How a web app remembers *who you are* between requests after you log in — and everything that can go wrong from the moment a session is handed out to the moment it should die. Break any stage and an attacker can guess, steal, reuse or outlive your session: **session hijacking**.
 
-> This is the **TryHackMe "Session Management" room** (Jr. Penetration Tester → Authentication). It covers the session lifecycle, the IAAA model, cookies vs tokens, the vulnerabilities at each lifecycle stage, and a practical that maps the lifecycle of a student/lecturer web app.
+> This is the **TryHackMe "Session Management" room** (Jr. Penetration Tester → Web Application Vulnerabilities II). It covers the session lifecycle, the IAAA model, cookies vs tokens, the vulnerabilities at each lifecycle stage, and a practical that maps the lifecycle of a student/lecturer web app.
 >
-> 🔗 Related notes: [IDOR](../../Vulnerabilities/IDOR/IDOR.md) (a horizontal authorisation bypass is exactly an IDOR), [XSS](../../Vulnerabilities/XSS/XSS.md) (the classic way to *steal* a session cookie — and why `HttpOnly` exists).
+> 🔗 Same module (**Web Application Vulnerabilities II**): [Broken Authentication](./Broken-Authentication.md) (the attack side of these session flaws), [File Inclusion](./File-Inclusion.md). Related standalone labs: [IDOR](../../Vulnerabilities/IDOR/IDOR.md) (a horizontal authorisation bypass is exactly an IDOR), [XSS](../../Vulnerabilities/XSS/XSS.md) (the classic way to *steal* a session cookie — and why `HttpOnly` exists).
 
 ---
 
