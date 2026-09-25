@@ -49,7 +49,7 @@ Web-Security-Academy/
 
 | Platform | Path/Topic | What it covers |
 | --- | --- | --- |
-| **TryHackMe** | Jr. Penetration Tester → Authentication | Session management — the session lifecycle, IAAA, cookies vs tokens, and the bugs at each stage (fixation, authorisation bypass, long lifetimes, broken logout) |
+| **TryHackMe** | Jr. Penetration Tester → Authentication | Session management (lifecycle, IAAA, cookies vs tokens) and authentication bypass (username enumeration, brute force, password-reset logic flaws, cookie tampering) |
 | **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
@@ -85,6 +85,7 @@ Rooms under **Authentication**:
 | Room | Focus | Status |
 | --- | --- | --- |
 | Session Management | Session lifecycle (creation → tracking → expiry → termination), IAAA, cookies vs tokens, fixation/authorisation-bypass/expiry/logout flaws, and mapping a live app's lifecycle in DevTools | ✅ Done |
+| Authentication Bypass | Username enumeration + brute force with ffuf, a password-reset parameter-pollution logic flaw, and plain/hashed/base64 cookie manipulation — plus mitigations | ✅ Done |
 
 Standalone labs under **Vulnerabilities**:
 
