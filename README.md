@@ -39,6 +39,7 @@ TryHackMe/
 │   ├── nmap/
 │   └── Web-Application-Security-Fundamentals/
 └── Vulnerabilities/
+    ├── File-Inclusion/
     ├── IDOR/
     ├── SQLi/
     ├── SSRF/
@@ -53,7 +54,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
-| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
+| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA), and file inclusion (path traversal, LFI, RFI) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
 More platforms, paths, and rooms/labs are added as I progress.
@@ -95,6 +96,7 @@ Standalone labs under **Vulnerabilities**:
 | Cross-Site Scripting (XSS) | Reflected, stored, DOM-based and blind XSS; escaping different injection contexts, filter bypasses, cookie exfiltration, and mitigations | ✅ Done |
 | Server-Side Request Forgery (SSRF) | The four input vectors, identifying/confirming blind SSRF, deny-list/allow-list/open-redirect bypasses, cloud metadata theft, and the Acme avatar traversal lab | ✅ Done |
 | Insecure Direct Object Reference (IDOR) | Broken access control / BOLA; plaintext, encoded, hashed and unpredictable object references, the two-account technique, where vectors hide, and the Acme customer-API lab | ✅ Done |
+| File Inclusion (Path Traversal, LFI & RFI) | Reading files outside the web root, local inclusion → RCE, filter bypasses (null byte, `....//`, forced-prefix), remote inclusion via `allow_url_fopen`, and testing every input channel (URL/cookie/POST) | ✅ Done |
 
 ---
 
