@@ -37,7 +37,8 @@ TryHackMe/
 │   ├── Network-Reconnaissance/
 │   ├── nmap/
 │   ├── Web-Application-Security-Fundamentals/
-│   └── Web-Application-Vulnerabilities-II/
+│   ├── Web-Application-Vulnerabilities-II/
+│   └── Vulnerability-Knowledge/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -53,6 +54,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Vulnerabilities II | Session management (lifecycle, IAAA, cookies vs tokens), broken authentication (username enumeration, brute force, password-reset logic flaws, cookie tampering), and file inclusion (path traversal, LFI, RFI) |
+| **TryHackMe** | Jr. Penetration Tester → Vulnerability Knowledge | Researching vulnerabilities in public databases (CVE, NVD, Exploit-DB), scanning at scale, and manually validating whether a CVE actually applies to a target |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -90,6 +92,19 @@ Rooms under **Web Application Vulnerabilities II**:
 | Command Injection | Injecting OS commands via shell operators (`;` `&&` `\|`), verbose vs blind detection (time delay / write-to-file), Linux & Windows payloads, and remediation (server-side allowlisting, least privilege, why filters get bypassed) | ✅ Done |
 | API Pentesting | RESTful fundamentals (methods, 401 vs 403, JWTs), then the OWASP API Top 10 headliners — BOLA/IDOR, broken authentication, excessive data exposure, mass assignment, rate limiting — and chaining them from customer to admin | ✅ Done |
 | Support (challenge) | ⬜ Not started |
+
+Rooms under **Vulnerability Knowledge**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Understanding Vulnerability Databases | What vuln databases are and why they exist; the CVE/CVSS/CPE/CWE/CNA building blocks; severity vs risk; and the division of labour between the CVE List (MITRE), NVD (NIST), and Exploit-DB | ✅ Done |
+| Vulnerability Scanning Tools | ⬜ Not started |
+| Basic Vulnerability Identification Techniques | ⬜ Not started |
+| NoScope: Finding RCE (CVE-2026-35482) | ⬜ Not started |
+| n8n: CVE-2025-68613 | ⬜ Not started |
+| AD: BadSuccessor | ⬜ Not started |
+| Fragnesia (CVE-2026-46300) | ⬜ Not started |
+| Nginx Rift (CVE-2026-42945) | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
