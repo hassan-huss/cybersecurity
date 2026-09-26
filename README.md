@@ -100,7 +100,7 @@ Rooms under **Vulnerability Knowledge**:
 | Understanding Vulnerability Databases | What vuln databases are and why they exist; the CVE/CVSS/CPE/CWE/CNA building blocks; severity vs risk; and the division of labour between the CVE List (MITRE), NVD (NIST), and Exploit-DB | ✅ Done |
 | Vulnerability Scanning Tools | Nmap (host discovery → `-sV` → `-A` → NSE scripts like `ftp-anon`), Nikto web-server checks (version leak, missing headers, `phpinfo`, directory indexing, RFI lead), OpenVAS/Greenbone targets → tasks → reports, and scanning best practices | ✅ Done |
 | Basic Vulnerability Identification Techniques | ⬜ Not started |
-| NoScope: Finding RCE (CVE-2026-35482) | ⬜ Not started |
+| NoScope: Finding RCE (CVE-2026-35482) | Alf.io JavaScript sandbox escape: the injected `returnClass` object exposes `Class.forName()`, so a class name passed as a string bypasses the source-text blocklist, reaching Java reflection → `Runtime.exec()` → RCE; plus NoScope/continuous-pentesting and blocklist-vs-allowlist mitigations | ✅ Done |
 | n8n: CVE-2025-68613 | ⬜ Not started |
 | AD: BadSuccessor | ⬜ Not started |
 | Fragnesia (CVE-2026-46300) | ⬜ Not started |
