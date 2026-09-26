@@ -101,8 +101,8 @@ Rooms under **Vulnerability Knowledge**:
 | Vulnerability Scanning Tools | Nmap (host discovery → `-sV` → `-A` → NSE scripts like `ftp-anon`), Nikto web-server checks (version leak, missing headers, `phpinfo`, directory indexing, RFI lead), OpenVAS/Greenbone targets → tasks → reports, and scanning best practices | ✅ Done |
 | Basic Vulnerability Identification Techniques | ⬜ Not started |
 | NoScope: Finding RCE (CVE-2026-35482) | Alf.io JavaScript sandbox escape: the injected `returnClass` object exposes `Class.forName()`, so a class name passed as a string bypasses the source-text blocklist, reaching Java reflection → `Runtime.exec()` → RCE; plus NoScope/continuous-pentesting and blocklist-vs-allowlist mitigations | ✅ Done |
-| n8n: CVE-2025-68613 | ⬜ Not started |
-| AD: BadSuccessor | ⬜ Not started |
+| n8n: CVE-2025-68613 | Node.js expression-injection RCE: n8n `{{ }}` expressions run as unsandboxed JavaScript, so `this.process.mainModule.require('child_process')` reaches command execution with the app's privileges; plus root cause (missing context isolation), detection (proxy body logging + Sigma on `/rest/workflows`), and mitigations | ✅ Done |
+| AD: BadSuccessor | Active Directory privesc abusing delegated Managed Service Accounts (dMSA): OU write access lets you create a dMSA and fake a completed migration (`msDS-ManagedAccountPrecededByLink` / `msDS-DelegatedMSAState`) linking it to Administrator, then Kerberos ticket abuse (SharpSuccessor → Rubeus `tgtdeleg`/`asktgs /dmsa` → pass-the-ticket, or bloodyAD/Impacket on Linux) inherits domain admin; plus least-privilege + attribute-lockdown mitigations | ✅ Done |
 | Fragnesia (CVE-2026-46300) | ⬜ Not started |
 | Nginx Rift (CVE-2026-42945) | ⬜ Not started |
 
