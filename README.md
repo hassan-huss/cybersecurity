@@ -98,7 +98,7 @@ Rooms under **Vulnerability Knowledge**:
 | Room | Focus | Status |
 | --- | --- | --- |
 | Understanding Vulnerability Databases | What vuln databases are and why they exist; the CVE/CVSS/CPE/CWE/CNA building blocks; severity vs risk; and the division of labour between the CVE List (MITRE), NVD (NIST), and Exploit-DB | ✅ Done |
-| Vulnerability Scanning Tools | ⬜ Not started |
+| Vulnerability Scanning Tools | Nmap (host discovery → `-sV` → `-A` → NSE scripts like `ftp-anon`), Nikto web-server checks (version leak, missing headers, `phpinfo`, directory indexing, RFI lead), OpenVAS/Greenbone targets → tasks → reports, and scanning best practices | ✅ Done |
 | Basic Vulnerability Identification Techniques | ⬜ Not started |
 | NoScope: Finding RCE (CVE-2026-35482) | ⬜ Not started |
 | n8n: CVE-2025-68613 | ⬜ Not started |
