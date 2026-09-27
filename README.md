@@ -39,7 +39,8 @@ TryHackMe/
 │   ├── Web-Application-Security-Fundamentals/
 │   ├── Web-Application-Vulnerabilities-II/
 │   ├── Vulnerability-Knowledge/
-│   └── Password-Attacks/
+│   ├── Password-Attacks/
+│   └── Metasploit-and-Exploitation/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -57,6 +58,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Web Application Vulnerabilities II | Session management (lifecycle, IAAA, cookies vs tokens), broken authentication (username enumeration, brute force, password-reset logic flaws, cookie tampering), and file inclusion (path traversal, LFI, RFI) |
 | **TryHackMe** | Jr. Penetration Tester → Vulnerability Knowledge | Researching vulnerabilities in public databases (CVE, NVD, Exploit-DB), scanning at scale, and manually validating whether a CVE actually applies to a target |
 | **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
+| **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -117,6 +119,18 @@ Rooms under **Password Attacks**:
 | Introduction to Wordlists | Building *targeted* wordlists from OSINT (CeWL site-scrape, `strings` on PDFs, `awk` name→username formats, `crunch` pattern passwords), cleaning them (dedupe/lowercase/filter), then using them with `ffuf` for directory discovery and Hydra to brute-force a login form | ✅ Done |
 | Password Cracking | — | ⬜ Not started |
 | Checkmate (challenge) | — | ⬜ Not started |
+
+Rooms under **Metasploit and Exploitation**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Metasploit: The Basics | What the framework is (Pro vs Framework, the three pillars), the vulnerability → exploit → payload chain, the seven module categories, staged vs single payloads, and navigating `msfconsole` — `search`/filters, exploit rankings, and `info` | 🚧 In progress |
+| Metasploit: Scanning and Exploitation | — | ⬜ Not started |
+| Metasploit: Post-Exploitation | — | ⬜ Not started |
+| Metasploit: Payload Generation | — | ⬜ Not started |
+| Exploitation and Weaponisation | — | ⬜ Not started |
+| Shells & Listeners Fundamentals | — | ⬜ Not started |
+| Shell Payload Generation & Delivery | — | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
