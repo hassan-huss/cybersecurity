@@ -38,7 +38,8 @@ TryHackMe/
 │   ├── nmap/
 │   ├── Web-Application-Security-Fundamentals/
 │   ├── Web-Application-Vulnerabilities-II/
-│   └── Vulnerability-Knowledge/
+│   ├── Vulnerability-Knowledge/
+│   └── Password-Attacks/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -55,6 +56,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Vulnerabilities II | Session management (lifecycle, IAAA, cookies vs tokens), broken authentication (username enumeration, brute force, password-reset logic flaws, cookie tampering), and file inclusion (path traversal, LFI, RFI) |
 | **TryHackMe** | Jr. Penetration Tester → Vulnerability Knowledge | Researching vulnerabilities in public databases (CVE, NVD, Exploit-DB), scanning at scale, and manually validating whether a CVE actually applies to a target |
+| **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -105,6 +107,16 @@ Rooms under **Vulnerability Knowledge**:
 | AD: BadSuccessor | Active Directory privesc abusing delegated Managed Service Accounts (dMSA): OU write access lets you create a dMSA and fake a completed migration (`msDS-ManagedAccountPrecededByLink` / `msDS-DelegatedMSAState`) linking it to Administrator, then Kerberos ticket abuse (SharpSuccessor → Rubeus `tgtdeleg`/`asktgs /dmsa` → pass-the-ticket, or bloodyAD/Impacket on Linux) inherits domain admin; plus least-privilege + attribute-lockdown mitigations | ✅ Done |
 | Fragnesia (CVE-2026-46300) | ⬜ Not started |
 | Nginx Rift (CVE-2026-42945) | ⬜ Not started |
+
+Rooms under **Password Attacks**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Phishing Basics | — | ⬜ Not started |
+| Hydra | — | ⬜ Not started |
+| Introduction to Wordlists | Building *targeted* wordlists from OSINT (CeWL site-scrape, `strings` on PDFs, `awk` name→username formats, `crunch` pattern passwords), cleaning them (dedupe/lowercase/filter), then using them with `ffuf` for directory discovery and Hydra to brute-force a login form | ✅ Done |
+| Password Cracking | — | ⬜ Not started |
+| Checkmate (challenge) | — | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
