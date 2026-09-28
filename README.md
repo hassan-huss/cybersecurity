@@ -125,7 +125,7 @@ Rooms under **Metasploit and Exploitation**:
 | Room | Focus | Status |
 | --- | --- | --- |
 | Metasploit: The Basics | What the framework is (Pro vs Framework, the three pillars), the vulnerability → exploit → payload chain, the seven module categories, staged vs single payloads, and navigating `msfconsole` — `search`/filters, exploit rankings, and `info` | 🚧 In progress |
-| Metasploit: Scanning and Exploitation | — | ⬜ Not started |
+| Metasploit: Scanning and Exploitation | The scan → store → identify → exploit cycle: `portscan`/`db_nmap` + service scanners, the Metasploit database (workspaces, `hosts`/`services`/`creds`, `-R` auto-fill), version-string → CVE vuln scanning, then two contrasting exploits (EternalBlue → SYSTEM Meterpreter; vsftpd 2.3.4 backdoor → root command shell) proving the workflow is OS-agnostic | ✅ Done |
 | Metasploit: Post-Exploitation | — | ⬜ Not started |
 | Metasploit: Payload Generation | — | ⬜ Not started |
 | Exploitation and Weaponisation | — | ⬜ Not started |
