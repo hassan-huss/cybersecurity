@@ -127,7 +127,7 @@ Rooms under **Metasploit and Exploitation**:
 | Metasploit: The Basics | What the framework is (Pro vs Framework, the three pillars), the vulnerability → exploit → payload chain, the seven module categories, staged vs single payloads, and navigating `msfconsole` — `search`/filters, exploit rankings, and `info` | 🚧 In progress |
 | Metasploit: Scanning and Exploitation | The scan → store → identify → exploit cycle: `portscan`/`db_nmap` + service scanners, the Metasploit database (workspaces, `hosts`/`services`/`creds`, `-R` auto-fill), version-string → CVE vuln scanning, then two contrasting exploits (EternalBlue → SYSTEM Meterpreter; vsftpd 2.3.4 backdoor → root command shell) proving the workflow is OS-agnostic | ✅ Done |
 | Metasploit: Post-Exploitation | — | ⬜ Not started |
-| Metasploit: Payload Generation | — | ⬜ Not started |
+| Metasploit: Payload Generation | Generating standalone payloads with `msfvenom` — the flag reference, staged vs stageless, executable vs transform output formats, a per-scenario recipe table, why encoding is bad-character removal (not AV evasion), template injection (`-x`/`-k`) and its detection trade-offs, and catching shells with `exploit/multi/handler` (the payload/LHOST/LPORT "must match exactly" rule) | ✅ Done |
 | Exploitation and Weaponisation | — | ⬜ Not started |
 | Shells & Listeners Fundamentals | — | ⬜ Not started |
 | Shell Payload Generation & Delivery | — | ⬜ Not started |
