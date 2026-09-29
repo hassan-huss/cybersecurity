@@ -40,7 +40,8 @@ TryHackMe/
 │   ├── Web-Application-Vulnerabilities-II/
 │   ├── Vulnerability-Knowledge/
 │   ├── Password-Attacks/
-│   └── Metasploit-and-Exploitation/
+│   ├── Metasploit-and-Exploitation/
+│   └── Specialized-Domains/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -59,6 +60,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Vulnerability Knowledge | Researching vulnerabilities in public databases (CVE, NVD, Exploit-DB), scanning at scale, and manually validating whether a CVE actually applies to a target |
 | **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
 | **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
+| **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -136,7 +138,7 @@ Rooms under **Specialized Domains** *(branching out beyond the core pentesting p
 
 | Room | Focus | Status |
 | --- | --- | --- |
-| Mobile Application Security | Mobile app pentesting — static analysis, MobSF, and the OWASP Mobile Top 10 | ⬜ Not started |
+| Mobile Application Security | How mobile apps are packaged (manifest, sandbox, components), the four-phase methodology, static analysis (reading the manifest, hunting hardcoded secrets, MobSF), dynamic analysis (traffic interception, SSL pinning, Frida/Objection, insecure logging), the common vulnerability categories mapped to the OWASP Mobile Top 10, and a MobSF static-analysis CTF (Leaky Package — APK + IPA) | ✅ Done |
 | Cloud Security Fundamentals | Cloud security fundamentals + a guided, cloud-agnostic attack chain end to end | ⬜ Not started |
 | LLM Pentesting | Identifying, fingerprinting, and exploiting LLM components during an engagement | ⬜ Not started |
 
