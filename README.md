@@ -132,6 +132,14 @@ Rooms under **Metasploit and Exploitation**:
 | Shells & Listeners Fundamentals | Manual shell craft: reverse vs bind shells (who initiates + which firewall each beats), the netcat→rlwrap→socat→msfvenom/`multi-handler` tool ladder, netcat listener flags + `-e` caveat, socat address specs (Linux/Windows, `EXEC:"bash -li"`), shell stabilisation (Python `pty.spawn` + `stty raw -echo` + terminal sizing, `rlwrap`, full socat TTY bundle `pty,stderr,sigint,setsid,sane`), and TLS-encrypted shells (self-signed cert + socat `OPENSSL` to blend into HTTPS) | ✅ Done |
 | Shell Payload Generation & Delivery | Generating and *delivering* payloads: manual reverse/bind shells (netcat FIFO, Python `dup2`, bash `/dev/tcp`, PowerShell) and the payload-selection checklist, `msfvenom` (syntax, staged vs stageless naming, Meterpreter, output formats, weak-evasion encoding), the `multi/handler` listener (the `PAYLOAD`/`LHOST`/`LPORT`-must-match rule, jobs vs sessions), and webshells (the read-param → OS → output pattern, upgrading a webshell into a full reverse shell, detection + cleanup hygiene) | ✅ Done |
 
+Rooms under **Specialized Domains** *(branching out beyond the core pentesting path)*:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Mobile Application Security | Mobile app pentesting — static analysis, MobSF, and the OWASP Mobile Top 10 | ⬜ Not started |
+| Cloud Security Fundamentals | Cloud security fundamentals + a guided, cloud-agnostic attack chain end to end | ⬜ Not started |
+| LLM Pentesting | Identifying, fingerprinting, and exploiting LLM components during an engagement | ⬜ Not started |
+
 Standalone labs under **Vulnerabilities**:
 
 | Room | Focus | Status |
