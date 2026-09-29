@@ -128,7 +128,7 @@ Rooms under **Metasploit and Exploitation**:
 | Metasploit: Scanning and Exploitation | The scan → store → identify → exploit cycle: `portscan`/`db_nmap` + service scanners, the Metasploit database (workspaces, `hosts`/`services`/`creds`, `-R` auto-fill), version-string → CVE vuln scanning, then two contrasting exploits (EternalBlue → SYSTEM Meterpreter; vsftpd 2.3.4 backdoor → root command shell) proving the workflow is OS-agnostic | ✅ Done |
 | Metasploit: Post-Exploitation | — | ⬜ Not started |
 | Metasploit: Payload Generation | Generating standalone payloads with `msfvenom` — the flag reference, staged vs stageless, executable vs transform output formats, a per-scenario recipe table, why encoding is bad-character removal (not AV evasion), template injection (`-x`/`-k`) and its detection trade-offs, and catching shells with `exploit/multi/handler` (the payload/LHOST/LPORT "must match exactly" rule) | ✅ Done |
-| Exploitation and Weaponisation | — | ⬜ Not started |
+| Exploitation and Weaponisation | The consultant's exploitation → weaponisation workflow: analysing a finding (affected functionality, confirm exploitability with auxiliary scanners / module `check`, reproduce twice, decide whether to exploit), controlled *minimum-proof* exploitation (`getuid`→SYSTEM, `SYSTEM_USER`=`sa`), context-aware weaponisation (trust boundaries, access ≠ business impact, abusing legitimate high-value actions), chaining flaws into a realistic attack path (FTP→SSH lateral movement; stored XSS→admin session), and interpreting tool output honestly | ✅ Done |
 | Shells & Listeners Fundamentals | — | ⬜ Not started |
 | Shell Payload Generation & Delivery | — | ⬜ Not started |
 
