@@ -142,6 +142,15 @@ Rooms under **Specialized Domains** *(branching out beyond the core pentesting p
 | Cloud Security Fundamentals | Cloud security fundamentals + a guided, cloud-agnostic attack chain end to end | ⬜ Not started |
 | LLM Pentesting | Identifying, fingerprinting, and exploiting LLM components during an engagement | ⬜ Not started |
 
+Rooms under **Python Scripting Basics** *(learning Python from zero, ending in real pentest scripts)*:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Python: Simple Demo | A guided first look at what a basic Python program looks like | ⬜ Not started |
+| Python: Core Concepts | Foundational language concepts — variables, control flow, functions, data structures | ⬜ Not started |
+| Python: Building Scripts | Putting the pieces together into standalone, runnable scripts | ⬜ Not started |
+| Python: Pentesting Scripts | Practical offensive scripts — web recon, network/port scanning, hash cracking, and SSH brute-forcing | ⬜ Not started |
+
 Standalone labs under **Vulnerabilities**:
 
 | Room | Focus | Status |
