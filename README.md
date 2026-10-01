@@ -151,6 +151,18 @@ Rooms under **Python Scripting Basics** *(learning Python from zero, ending in r
 | Python: Building Scripts | Functions (parameters, return values, defaults, scope), `try`/`except` error handling, file I/O with `with` (`r`/`w`/`a` modes, wordlists), libraries and `pip`, capped by a Password Strength Checker that combines everything from both rooms | ✅ Done |
 | Python: Pentesting Scripts | Six security tools — web recon (subdomain/directory enumeration), ARP network discovery (Scapy), TCP port scanning (sockets), automated downloads (streaming), hash cracking (hashlib dictionary attack), and SSH brute-forcing (Paramiko) — plus a menu-driven mini-toolkit tying three of them together | ✅ Done |
 
+Rooms under **Privilege Escalation** *(turning a foothold into full control, Linux + Windows, plus two live jump challenges)*:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Host-Server Configuration Reviews | — | ⬜ Not started |
+| Linux Privilege Escalation: Enumeration | — | ⬜ Not started |
+| Linux Privilege Escalation: Basics | — | ⬜ Not started |
+| Linux Privilege Escalation: Automation | — | ⬜ Not started |
+| Windows Privilege Escalation | — | ⬜ Not started |
+| Jump (challenge) | — | ⬜ Not started |
+| Windows Jump (challenge) | — | ⬜ Not started |
+
 Standalone labs under **Vulnerabilities**:
 
 | Room | Focus | Status |
