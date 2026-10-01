@@ -149,7 +149,7 @@ Rooms under **Python Scripting Basics** *(learning Python from zero, ending in r
 | Python: Simple Demo | A guided first look at what a basic Python program looks like | ✅ Done |
 | Python: Core Concepts | Type conversion and f-strings, string methods (indexing, slicing, character checks), lists and dictionaries, the arithmetic and membership operators (`**`, `//`, `%`, `in`), and `for`/`while` loops with `range()`, `break` and `continue` | ✅ Done |
 | Python: Building Scripts | Functions (parameters, return values, defaults, scope), `try`/`except` error handling, file I/O with `with` (`r`/`w`/`a` modes, wordlists), libraries and `pip`, capped by a Password Strength Checker that combines everything from both rooms | ✅ Done |
-| Python: Pentesting Scripts | Practical offensive scripts — web recon, network/port scanning, hash cracking, and SSH brute-forcing | ⬜ Not started |
+| Python: Pentesting Scripts | Six security tools — web recon (subdomain/directory enumeration), ARP network discovery (Scapy), TCP port scanning (sockets), automated downloads (streaming), hash cracking (hashlib dictionary attack), and SSH brute-forcing (Paramiko) — plus a menu-driven mini-toolkit tying three of them together | ✅ Done |
 
 Standalone labs under **Vulnerabilities**:
 
