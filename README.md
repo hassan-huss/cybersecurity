@@ -155,7 +155,7 @@ Rooms under **Privilege Escalation** *(turning a foothold into full control, Lin
 
 | Room | Focus | Status |
 | --- | --- | --- |
-| Host-Server Configuration Reviews | — | ⬜ Not started |
+| Host-Server Configuration Reviews | Vulnerability-based vs configuration-based privesc; CIS Benchmarks (L1/L2) and DISA STIGs (CAT I–III) as the "secure" baseline; compliance tooling (Nessus, Lynis, OpenSCAP, CIS-CAT) vs offensive tooling (LinPEAS/WinPEAS/PowerUp); the six misconfiguration categories (users/groups, file permissions, services, scheduled tasks, credential storage, network config); and a situational-awareness → category enumeration → prioritise/chain methodology | ✅ Done |
 | Linux Privilege Escalation: Enumeration | — | ⬜ Not started |
 | Linux Privilege Escalation: Basics | — | ⬜ Not started |
 | Linux Privilege Escalation: Automation | — | ⬜ Not started |
