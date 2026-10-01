@@ -147,7 +147,7 @@ Rooms under **Python Scripting Basics** *(learning Python from zero, ending in r
 | Room | Focus | Status |
 | --- | --- | --- |
 | Python: Simple Demo | A guided first look at what a basic Python program looks like | ✅ Done |
-| Python: Core Concepts | Foundational language concepts — variables, control flow, functions, data structures | ⬜ Not started |
+| Python: Core Concepts | Type conversion and f-strings, string methods (indexing, slicing, character checks), lists and dictionaries, the arithmetic and membership operators (`**`, `//`, `%`, `in`), and `for`/`while` loops with `range()`, `break` and `continue` | ✅ Done |
 | Python: Building Scripts | Putting the pieces together into standalone, runnable scripts | ⬜ Not started |
 | Python: Pentesting Scripts | Practical offensive scripts — web recon, network/port scanning, hash cracking, and SSH brute-forcing | ⬜ Not started |
 
