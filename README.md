@@ -56,7 +56,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Network Reconnaissance | Active vs. passive recon methodology |
 | **TryHackMe** | Jr. Penetration Tester → nmap | Host discovery, basic/advanced port scanning, post-scan analysis |
 | **TryHackMe** | Jr. Penetration Tester → Web Application Security Fundamentals | Content discovery, fingerprinting modern web stacks (MERN, Next.js, Django, LAMP) and exploiting a real CVE in each, plus attacking web servers directly — Apache/Nginx/Python/Node and the IIS attack chain |
-| **TryHackMe** | Jr. Penetration Tester → Web Application Vulnerabilities II | Session management (lifecycle, IAAA, cookies vs tokens), broken authentication (username enumeration, brute force, password-reset logic flaws, cookie tampering), and file inclusion (path traversal, LFI, RFI) |
+| **TryHackMe** | Jr. Penetration Tester → Web Application Vulnerabilities II | Session management (lifecycle, IAAA, cookies vs tokens), broken authentication (username enumeration, brute force, password-reset logic flaws, cookie tampering), file inclusion (path traversal, LFI, RFI), API pentesting (BOLA, mass assignment, excessive data exposure), and JWT security (signature bypasses, weak secrets, algorithm confusion, audience claims) |
 | **TryHackMe** | Jr. Penetration Tester → Vulnerability Knowledge | Researching vulnerabilities in public databases (CVE, NVD, Exploit-DB), scanning at scale, and manually validating whether a CVE actually applies to a target |
 | **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
 | **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
@@ -97,6 +97,7 @@ Rooms under **Web Application Vulnerabilities II**:
 | File Inclusion | Path traversal (reading files outside the web root), LFI → RCE, filter bypasses (null byte, `....//`, forced-prefix), RFI via `allow_url_fopen`, and testing every input channel (URL/cookie/POST) | ✅ Done |
 | Command Injection | Injecting OS commands via shell operators (`;` `&&` `\|`), verbose vs blind detection (time delay / write-to-file), Linux & Windows payloads, and remediation (server-side allowlisting, least privilege, why filters get bypassed) | ✅ Done |
 | API Pentesting | RESTful fundamentals (methods, 401 vs 403, JWTs), then the OWASP API Top 10 headliners — BOLA/IDOR, broken authentication, excessive data exposure, mass assignment, rate limiting — and chaining them from customer to admin | ✅ Done |
+| JWT Security | JWT structure/signing algorithms, sensitive data leaking into the payload, signature-validation failures (no check, `alg:none` downgrade, crackable HS256 secrets, RS256→HS256 algorithm confusion), missing `exp`, and audience-claim cross-service relay attacks | ✅ Done |
 | Support (challenge) | ⬜ Not started |
 
 Rooms under **Vulnerability Knowledge**:

@@ -1,0 +1,280 @@
+# JWT Security
+
+How **JSON Web Tokens** (JWTs) carry session/identity data for token-based (API-style) authentication, and the five ways a real-world implementation breaks that trust: leaking secrets into the token itself, failing to actually check the signature, expiring tokens too late (or never), and forgetting which *application* a token was meant for.
+
+> This is the **TryHackMe "JWT Security" room** (Jr. Penetration Tester → Web Application Vulnerabilities II, premium room). It covers JWT structure and signing algorithms, then five practical misconfiguration classes against a small Flask API: sensitive data in the payload, no signature verification, `alg:none` downgrade, weak HS256 secrets (crackable offline), the RS256→HS256 "algorithm confusion" attack, missing/absent `exp`, and audience-claim (cross-service) confusion.
+>
+> 🔗 Same module: [Session Management](./Session-Management.md), [Broken Authentication](./Broken-Authentication.md), [File Inclusion](./File-Inclusion.md), [Command Injection](./Command-Injection.md), [API Pentesting](./API-Pentesting.md) — API Pentesting's JWT section (weak secrets, `alg:none`, missing `exp`) is the preview; this room is the deep dive.
+
+---
+
+**Table of contents**
+
+- [In plain English](#in-plain-english)
+- [Token-based auth vs cookies](#token-based-auth-vs-cookies)
+- [JWT structure](#jwt-structure)
+- [Signing algorithms](#signing-algorithms)
+- [1. Sensitive information disclosure](#1-sensitive-information-disclosure)
+- [2. Signature validation mistakes](#2-signature-validation-mistakes)
+- [3. JWT lifetimes](#3-jwt-lifetimes)
+- [4. Cross-service relay attacks (audience claim)](#4-cross-service-relay-attacks-audience-claim)
+- [Defences](#defences)
+- [Key takeaways](#key-takeaways)
+
+---
+
+## In plain English
+
+A JWT is like a **sealed, see-through envelope**: anyone who has it can read what's written inside (base64 is not encryption), but the wax seal (the signature) is supposed to prove *you* didn't write it yourself. Every bug in this room is really one of two things — (1) something sensitive got written where the see-through part can read it, or (2) the "wax seal" check was skipped, done wrong, or never set to expire.
+
+| Flaw | The trick in one line |
+| --- | --- |
+| **Sensitive data in payload** | Decode the token (just base64) → password/flag sitting in plain view |
+| **No signature check** | Strip the signature, edit the claims, server still accepts it |
+| **`alg:none` downgrade** | Set header `alg` to `none` → library treats "no signature" as "valid" |
+| **Weak HS256 secret** | Crack the secret offline with Hashcat/John → forge any claim, sign it correctly |
+| **Algorithm confusion (RS256→HS256)** | Known public key, reused as the HS256 *secret* → forge a correctly "signed" token |
+| **No `exp`** | Token never expires — once leaked, valid forever |
+| **Audience claim ignored** | Token meant for App B gets accepted (with its privileges) on App A |
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>Jargon, quickly:</strong> <strong>JWT</strong> = JSON Web Token, <code>header.payload.signature</code>, each part base64url-encoded. <strong>Claim</strong> = one key/value fact inside the payload (<code>username</code>, <code>admin</code>, <code>exp</code>). <strong>Base64</strong> ≠ encryption — it's just a text encoding, reversible by anyone with no key. <strong>HS256</strong> = HMAC-SHA256, a <em>symmetric</em> algorithm — one shared secret both signs and verifies. <strong>RS256</strong> = RSA-SHA256, <em>asymmetric</em> — a private key signs, the matching public key verifies (public key is fine to hand out). <strong>JWE</strong> = an <em>encrypted</em> JWT variant (not used here — JWTs here are only signed, not encrypted, so the payload is always readable). <strong>Algorithm confusion</strong> = tricking a verifier that expects RS256 into treating the known-public RSA key as if it were an HS256 shared secret. <strong>Audience (`aud`) claim</strong> = which application a token is valid for in a single-sign-on setup. <strong>exp</strong> = expiration-time claim (Unix timestamp).
+</div>
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>How to use these notes:</strong> a lookup sheet, not rote memorisation. The one idea to keep: <em>a JWT's payload is always readable by whoever holds it — its only real protection is the signature, and the signature is only as strong as (a) whether it's checked at all, (b) which algorithm is allowed, and (c) how strong the secret/key behind it is</em>. Every attack here is really "can I make the server accept claims it never actually verified?"
+</div>
+
+---
+
+## Token-based auth vs cookies
+
+APIs serve multiple front-ends (web + mobile + other services) from one back end, so cookie-based sessions (browser-only, automatic) don't generalise well. **Token-based auth** moves session handling into client-side code instead: after login the server returns a token in the response body; client JS stores it (commonly `LocalStorage`) and attaches it manually on every request, usually as `Authorization: Bearer <token>`. Nothing forces any particular token format — JWT is just the most common standardised one.
+
+**Lab API shape** (Flask, one endpoint pattern reused per example `exampleX`):
+
+```bash
+# Authenticate → get a JWT
+curl -H 'Content-Type: application/json' -X POST \
+  -d '{ "username" : "user", "password" : "passwordX" }' \
+  http://MACHINE_IP/api/v1.0/exampleX
+
+# Use the JWT → verify a user (admin=1 on the decoded token unlocks the flag)
+curl -H 'Authorization: Bearer [JWT token]' \
+  'http://MACHINE_IP/api/v1.0/example2?username=Y'
+```
+
+---
+
+## JWT structure
+
+Three base64url parts joined by dots: `header.payload.signature`.
+
+| Part | Holds | Notes |
+| --- | --- | --- |
+| **Header** | Token type (`JWT`) + signing algorithm (`alg`) | Readable/editable by anyone — this is the root of several attacks below |
+| **Payload** | The claims (registered, e.g. `exp`, `aud`; or public/private, developer-defined) | **Encoded, not encrypted** — readable by anyone holding the token |
+| **Signature** | Hash of header+payload, computed with the algorithm from the header | The *only* thing proving the claims weren't tampered with |
+
+## Signing algorithms
+
+| Algorithm | Type | Verified with | Risk if misused |
+| --- | --- | --- | --- |
+| **None** | No signature at all | Nothing — claims are unverifiable | Should never be accepted by a verifier; if it is, forge anything |
+| **HS256** (symmetric) | Shared secret hashes header+payload | Same secret, known to every verifier | Weak/guessable secret → crackable offline → forge valid signatures |
+| **RS256** (asymmetric) | Private key signs (hash → encrypt with private key) | Matching **public** key (safe to distribute) | If a verifier can be tricked into using the public key as an HS256 secret → forgery (algorithm confusion) |
+
+Once signed, a JWT can be trusted by *any* system that knows the secret/public key — which is the whole appeal for centralised SSO authentication servers serving many applications.
+
+---
+
+## 1. Sensitive information disclosure
+
+With server-side cookie sessions, values like `$_SESSION['password_hash']` never leave the server. JWTs don't have that protection — the **whole payload goes to the client**, so developers who copy the cookie-session habit of "just stash it in the session object" end up shipping secrets in the token itself: password hashes, cleartext passwords, internal hostnames/IPs, flags.
+
+```python
+# The mistake — flag/password riding along in the payload
+payload = {
+    "username": username,
+    "password": password,
+    "admin": 0,
+    "flag": "[redacted]"
+}
+access_token = jwt.encode(payload, self.secret, algorithm="HS256")
+```
+
+**Practical (example1):** decoding the payload of a token from `password1` login directly exposes the redacted flag field — no attack beyond base64-decoding, since that part of a JWT was never meant to be secret.
+
+```python
+# The fix — only non-sensitive identifiers in the token; secrets looked up server-side
+payload = jwt.decode(token, self.secret, algorithms="HS256")
+username = payload['username']
+flag = self.db_lookup(username, "flag")   # fetched server-side, never embedded
+```
+
+---
+
+## 2. Signature validation mistakes
+
+This is where most real exploitation value is — if the signature isn't *actually* checked, every claim becomes attacker-controlled.
+
+### No signature verification at all
+
+```python
+# The mistake
+payload = jwt.decode(token, options={'verify_signature': False})
+```
+
+**Practical (example2):** verify normally first, then strip the third JWT segment (leave the trailing dot, no signature) and resend — the server still accepts it. With verification effectively disabled, editing `admin` to `1` in the payload and resending is enough to pull the admin flag. More common on server-to-server APIs where a threat actor who's already reached the backend can forge tokens freely.
+
+```python
+# The fix — always supply the secret/key and an explicit allowed-algorithm list
+payload = jwt.decode(token, self.secret, algorithms="HS256")
+```
+
+### Downgrading to `alg: none`
+
+The `None` algorithm exists in the standard for a legitimate reason (chained servers where an upstream process already verified the signature), but if a verifier doesn't **pin** or **deny** it, an attacker can just set `alg` to `None` in the header and the library treats "nothing to verify" as "verified".
+
+**Practical (example3):** edit the header's `alg` claim to `None` via CyberChef's URL-encoded-base64 recipe, resubmit — still accepted despite the now-invalid signature — then flip `admin` to `1` for the flag.
+
+```python
+# The mistake — algorithm taken straight from the attacker-controlled header
+header = jwt.get_unverified_header(token)
+signature_algorithm = header['alg']
+payload = jwt.decode(token, self.secret, algorithms=signature_algorithm)
+```
+
+```python
+# The fix — pin the allowed algorithms as an explicit list the attacker can't widen
+payload = jwt.decode(token, self.secret, algorithms=["HS256", "HS384", "HS512"])
+```
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+PyJWT (the library used in this room) actually hardens this itself: if a secret is supplied while <code>alg:none</code> is selected, it raises an exception rather than silently "verifying" — one reason this exact downgrade is rarer against modern libraries than it used to be, though older/custom JWT code can still have it.
+</div>
+
+### Weak symmetric secrets
+
+HS256's security is only as good as the secret's entropy. A short/common secret can be recovered **offline** (no rate limiting possible — the attacker isn't even hitting the server) and then used to forge a validly-signed token.
+
+**Practical (example4):**
+```bash
+# Save the captured JWT, then crack its secret against a common-secrets list
+wget https://raw.githubusercontent.com/wallarm/jwt-secrets/master/jwt.secrets.list
+hashcat -m 16500 -a 0 jwt.txt jwt.secrets.list
+```
+Once the secret is known, re-sign a forged `admin:1` payload with it for a fully valid, server-accepted token.
+
+### Algorithm confusion (RS256 → HS256)
+
+If a verifier allows **both** symmetric and asymmetric algorithms through the same decode call, some libraries will happily use whatever "key" is passed — including treating a known **public** RSA key as an HS256 shared secret. Since public keys are, by design, not secret, this hands an attacker a signing key for the "secret" signature scheme.
+
+```python
+# The mistake — mixing algorithm families in one decode(), ambiguous use of `self.secret`
+payload = jwt.decode(token, self.secret,
+    algorithms=["HS256", "HS384", "HS512", "RS256", "RS384", "RS512"])
+```
+
+**Practical (example5):** downgrade the header `alg` to `HS256`, then sign a forged payload using the server's own (non-sensitive, handed-out) RSA public key as the HMAC secret:
+
+```python
+import jwt
+# PyJWT normally refuses an asymmetric key as an HMAC secret — bypass that check for this run only
+jwt.algorithms.HMACAlgorithm.prepare_key = lambda self, key: key.encode() if isinstance(key, str) else key
+
+public_key = "ADD_KEY_HERE"
+payload = {'username': 'user', 'admin': 0}
+access_token = jwt.encode(payload, public_key, algorithm="HS256")
+print(access_token)
+```
+Flip `admin` to `1` and `username` to `admin` before signing, and the forged token verifies as genuinely admin.
+
+```python
+# The fix — branch on the algorithm family and use the matching key type for each
+header = jwt.get_unverified_header(token)
+algorithm = header['alg']
+if "RS" in algorithm:
+    payload = jwt.decode(token, self.public_key, algorithms=["RS256", "RS384", "RS512"])
+elif "HS" in algorithm:
+    payload = jwt.decode(token, self.secret, algorithms=["HS256", "HS384", "HS512"])
+```
+
+| Signature mistake | Root cause | Fix |
+| --- | --- | --- |
+| Not verified at all | `verify_signature: False` left in / debug code shipped | Always pass secret/key + explicit algorithm list |
+| `alg:none` accepted | Algorithm read from the attacker-controlled header, not pinned | Pin the allowed algorithms server-side |
+| Weak HS256 secret | Short/guessable string, "it's just for software" mentality | Long, random, high-entropy secret |
+| Algorithm confusion | Symmetric + asymmetric algorithms mixed in one `decode()` call | Branch by algorithm family, use the matching key per branch |
+
+---
+
+## 3. JWT lifetimes
+
+Cookie sessions can be killed server-side at will. A signed JWT has no built-in kill switch — the only way to time-box it is the `exp` claim, checked **before** signature work even matters. If `exp` is missing or set too far out, a captured token stays valid indefinitely, and "revoking" it early would require a server-side blocklist — which defeats the whole decentralised point of JWTs. Picking the right `exp` is a judgement call based on what the token protects (banking app vs. mail client); refresh tokens are the standard way to keep sessions alive without making the access token itself long-lived.
+
+**Practical (example6):** the room hands over a JWT whose payload has no `exp` claim at all — permanently valid as long as the signature checks out:
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJhZG1pbiI6MX0.ko7EQiATQQzrQPwRO8ZTY37pQWGLPZWEvdWH0tVDNPU
+```
+(This is the room's own published worked example — already `admin:1` — supplied directly to recover the flag; no cracking/forging needed for this step.)
+
+```python
+# The fix — set a sensible exp; most libraries then check it automatically
+lifetime = datetime.datetime.now() + datetime.timedelta(minutes=5)
+payload = {'username': username, 'admin': 0, 'exp': lifetime}
+access_token = jwt.encode(payload, self.secret, algorithm="HS256")
+```
+
+---
+
+## 4. Cross-service relay attacks (audience claim)
+
+A single SSO authentication server often issues JWTs for *several* applications. The **`aud`** (audience) claim is meant to say which application a given token is valid for — but the authentication server can't enforce that; **each application has to check `aud` itself**. If an app forgets to, a token legitimately issued (and signature-valid!) for App B can be replayed against App A, carrying whatever privileges it had there.
+
+```text
+Login for appA → token has aud=appA, admin=0        (user is not admin on appA)
+Login for appB → token has aud=appB, admin=1        (same user IS admin on appB)
+→ Replay the appB token against appA, which never checks `aud`
+→ appA honours the admin=1 claim meant only for appB  (Cross-Service Relay)
+```
+
+**Practical (example7):** authenticate with `"application":"appA"` → not admin there. Authenticate again with `"application":"appB"` → admin there. Using the **appB** token against **appB**'s own endpoint recovers the flag; the room's point is that `appA`'s endpoint correctly rejects a wrong-audience token while a vulnerable endpoint would not.
+
+```python
+# The fix — explicitly pass the expected audience(s) to decode()
+payload = jwt.decode(token, self.secret, audience=["appA"], algorithms="HS256")
+```
+
+---
+
+## Defences
+
+| Measure | Stops |
+| --- | --- |
+| **Never put secrets/PII in claims** | Sensitive information disclosure — payload is always client-readable |
+| **Always verify the signature, with an explicit algorithm allowlist** | No-verification and `alg:none` downgrade bypasses |
+| **Branch verification by algorithm family (HS vs RS)** | Algorithm confusion (public key reused as HMAC secret) |
+| **Long, random, high-entropy HS256 secrets** | Offline secret cracking (Hashcat/John) |
+| **Set a sensible `exp`, pair with refresh tokens** | Indefinitely-valid leaked/stolen tokens |
+| **Validate `aud` on every application, not just the auth server** | Cross-service relay / audience confusion in SSO setups |
+
+**Tools:** [jwt.io](https://jwt.io) (quick decode/encode), CyberChef (URL-encoded-base64 editing of header/payload), Hashcat `-m 16500` / John (offline HS256 secret cracking), `jwt_tool` (automated JWT attack suite — covers all of the above plus JWKS spoofing).
+
+<div style="background:#fff7ed;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin:8px 0">
+Not covered in this room: <strong>JWKS spoofing</strong> (hosting a malicious JSON Web Key Set and pointing the <code>jku</code>/<code>kid</code> header at it so the verifier fetches the attacker's "trusted" public key) — a separate, more advanced signature-trust attack worth a dedicated follow-up room.
+</div>
+
+---
+
+## Key takeaways
+
+- A JWT's payload is **encoded, not encrypted** — anything placed in it is readable by anyone holding the token. Never put passwords, hashes, flags, or internal infra details in claims.
+- The signature is the *only* real protection; every attack in this room is a way of making a server accept claims it never actually verified: no check at all, `alg:none`, a crackable HS256 secret, or RS256→HS256 algorithm confusion using the public key as the "secret".
+- Pin the allowed signing algorithms explicitly server-side — never derive them from the attacker-controlled header, and never mix symmetric + asymmetric families in one decode call.
+- JWTs have no server-side kill switch; `exp` is the only expiry mechanism, so a missing/huge `exp` means a leaked token is valid forever.
+- In SSO setups serving multiple apps from one authentication server, the **`aud`** claim must be checked by *each* application — otherwise a token for App B can be replayed with App B's privileges against App A.
+
+<div style="background:#eef8ff;border-left:4px solid #2b8cf0;padding:12px;border-radius:6px;margin:8px 0">
+<strong>How this sits vs the others:</strong> this is the deep dive behind the JWT bullet points already flagged in <a href="./API-Pentesting.md">API Pentesting</a> (weak secret, <code>alg:none</code>, missing <code>exp</code>) and shares its core theme with <a href="./Session-Management.md">Session Management</a> and <a href="./Broken-Authentication.md">Broken Authentication</a> — a token (cookie or JWT) is only as trustworthy as the checks the server actually performs on it, never the checks a client-side UI merely implies.
+</div>
