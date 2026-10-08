@@ -64,7 +64,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
 | **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
 | **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
-| **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), and a deep dive into JWT security |
+| **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -175,7 +175,7 @@ Rooms under **Web Application Pentesting → Authentication** *(a new path start
 | Session Management | — | ⬜ Skipped |
 | JWT Security | JWT structure/signing algorithms, sensitive data leaking into the payload, signature-validation failures (no check, `alg:none` downgrade, crackable HS256 secrets, RS256→HS256 algorithm confusion), missing `exp`, and audience-claim cross-service relay attacks | ✅ Done |
 | OAuth Vulnerabilities | OAuth 2.0 roles/grant types, the Authorization Code flow end to end, identifying OAuth in the wild, and four attack classes — `redirect_uri` token hijacking, CSRF via missing `state`, implicit-grant token theft via XSS, and insufficient token expiry — plus the OAuth 2.1 hardening changes | ✅ Done |
-| Multi-Factor Authentication | — | ⬜ Not started |
+| Multi-Factor Authentication | Factor categories (know/have/are/somewhere/something-you-do) and 2FA mechanisms (TOTP, push, SMS, hardware tokens), then four real-world implementation flaws — OTP leaking in an XHR response, a session flag set before the OTP step, automated brute force surviving an auto-logout, and Evilginx-style real-time phishing proxies stealing the post-MFA session | ✅ Done |
 | Hammer (challenge) | — | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
