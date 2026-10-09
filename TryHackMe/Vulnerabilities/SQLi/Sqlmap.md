@@ -22,7 +22,7 @@
 
 ## What sqlmap does
 
-sqlmap replaces a lot of the manual SQLi work covered in the [TryHackMe SQL Injection Lab](../../../Vulnerabilities/SQLi/SQL-Injection-Lab.md) and the [PortSwigger SQLi notes](../../../Web-Security-Academy/SQL-Injection/) — instead of hand-crafting `UNION SELECT` payloads and boolean/time-based probes one at a time, sqlmap automates the detection engine and the enumeration that follows it.
+sqlmap replaces a lot of the manual SQLi work covered in the [TryHackMe SQL Injection Lab](./SQL-Injection-Lab.md) and the [PortSwigger SQLi notes](../../../Web-Security-Academy/SQL-Injection/) — instead of hand-crafting `UNION SELECT` payloads and boolean/time-based probes one at a time, sqlmap automates the detection engine and the enumeration that follows it.
 
 Run `sqlmap -h` for the basic help menu, `sqlmap -hh` for the full advanced option list.
 
