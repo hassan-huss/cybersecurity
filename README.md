@@ -42,7 +42,8 @@ TryHackMe/
 │   ├── Password-Attacks/
 │   ├── Metasploit-and-Exploitation/
 │   ├── Specialized-Domains/
-│   └── Privilege-Escalation/
+│   ├── Privilege-Escalation/
+│   └── sqlmap/
 ├── Web-Application-Pentesting/
 │   └── Authentication/
 └── Vulnerabilities/
@@ -64,6 +65,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Password Attacks | Phishing, online login brute-forcing (Hydra), building targeted wordlists from OSINT, and offline password/hash cracking — chained in a final challenge |
 | **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
 | **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
+| **TryHackMe** | Jr. Penetration Tester → sqlmap | Automating SQL injection detection and exploitation with sqlmap — command reference (basic/enumeration/OS-access flags), and full GET- and POST-based target walkthroughs |
 | **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
@@ -166,6 +168,13 @@ Rooms under **Privilege Escalation** *(turning a foothold into full control, Lin
 | Windows Privilege Escalation | — | ⬜ Not started |
 | Jump (challenge) | — | ⬜ Not started |
 | Windows Jump (challenge) | — | ⬜ Not started |
+
+Room **sqlmap** *(automating SQL injection with the sqlmap tool)*:
+
+| Task | Focus | Status |
+| --- | --- | --- |
+| Introduction + Using Sqlmap | What sqlmap is, the basic/enumeration/OS-access flag reference, and full GET- and POST-based walkthroughs (saving a request, session caching, enumerating DBs/tables/columns, dumping data) | ✅ Done |
+| Challenge | — | ⬜ Not started |
 
 Rooms under **Web Application Pentesting → Authentication** *(a new path started after finishing Jr. Penetration Tester)*:
 

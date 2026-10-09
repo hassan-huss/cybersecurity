@@ -4,7 +4,7 @@ A hands-on walk through an "employee management" web app riddled with deliberate
 
 > This is the **TryHackMe "SQL Injection" room** (Jr Penetration Tester path). The app is Flask + SQLite; the target is `http://MACHINE_IP:5000`. Toggle **Show Query** and **Guidance** in the top-right menu to see the exact SQL each challenge runs. Scripts referenced below are on the box's **Downloads** page (`/downloads/`).
 >
-> 🔗 Companion theory notes: PortSwigger's version of these techniques lives in [`Web-Security-Academy/SQL-Injection/`](../../../Web-Security-Academy/SQL-Injection/README.md) — especially [UNION attacks](../../../Web-Security-Academy/SQL-Injection/SQL-injection-UNION-attacks.md), [Blind SQLi](../../../Web-Security-Academy/SQL-Injection/Blind-SQL-injection.md), and [Second-order](../../../Web-Security-Academy/SQL-Injection/Second-order-SQL-injection.md).
+> 🔗 Companion theory notes: PortSwigger's version of these techniques lives in [`Web-Security-Academy/SQL-Injection/`](../../../Web-Security-Academy/SQL-Injection/README.md) — especially [UNION attacks](../../../Web-Security-Academy/SQL-Injection/SQL-injection-UNION-attacks.md), [Blind SQLi](../../../Web-Security-Academy/SQL-Injection/Blind-SQL-injection.md), and [Second-order](../../../Web-Security-Academy/SQL-Injection/Second-order-SQL-injection.md). For the sqlmap command reference used below, see [`Jr-Penetration-Tester/sqlmap/Sqlmap.md`](../../Jr-Penetration-Tester/sqlmap/Sqlmap.md).
 
 ---
 
