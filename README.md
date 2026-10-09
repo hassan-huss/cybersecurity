@@ -44,7 +44,8 @@ TryHackMe/
 │   ├── Specialized-Domains/
 │   └── Privilege-Escalation/
 ├── Web-Application-Pentesting/
-│   └── Authentication/
+│   ├── Authentication/
+│   └── Injection-Attacks/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -65,6 +66,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Metasploit and Exploitation | The Metasploit Framework end to end — navigating `msfconsole`, scanning + exploiting live targets, Meterpreter post-exploitation, and generating custom payloads with `msfvenom` — plus the manual craft behind it (shells, listeners, payload delivery) |
 | **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
 | **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
+| **TryHackMe** | Web Application Pentesting → Injection Attacks | Advanced SQL Injection (second-order, filter evasion, OOB exfiltration, header injection), NoSQL Injection (MongoDB), XXE Injection, Server-Side Template Injection, LDAP Injection, and ORM Injection — capped by the Injectics challenge |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -178,12 +180,25 @@ Rooms under **Web Application Pentesting → Authentication** *(a new path start
 | Multi-Factor Authentication | Factor categories (know/have/are/somewhere/something-you-do) and 2FA mechanisms (TOTP, push, SMS, hardware tokens), then four real-world implementation flaws — OTP leaking in an XHR response, a session flag set before the OTP step, automated brute force surviving an auto-logout, and Evilginx-style real-time phishing proxies stealing the post-MFA session | ✅ Done |
 | Hammer (challenge) | — | ⬜ Not started |
 
+Rooms under **Web Application Pentesting → Injection Attacks** *(a second copy of the SQLi room also lives under Vulnerabilities → SQLi, since it doubles as a standalone SQLi lab)*:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Advanced SQL Injection | Second-order (stored) SQLi, filter evasion (character encoding, no-quote/no-space bypasses), out-of-band exfiltration (SMB/HTTP/DNS via `INTO OUTFILE`/`xp_cmdshell`/`UTL_HTTP`), HTTP header injection, stored-procedure/XML/JSON injection, automation tools, and best practices | ✅ Done |
+| NoSQL Injection | — | ⬜ Not started |
+| XXE Injection | — | ⬜ Not started |
+| Server-Side Template Injection | — | ⬜ Not started |
+| LDAP Injection | — | ⬜ Not started |
+| ORM Injection | — | ⬜ Not started |
+| Injectics (challenge) | — | ⬜ Not started |
+
 Standalone labs under **Vulnerabilities**:
 
 | Room | Focus | Status |
 | --- | --- | --- |
 | SQL Injection Lab | Hands-on SQLi against a Flask/SQLite app: login bypass, `UNION` dumps, boolean-based blind, and two second-order injections + sqlmap tamper scripts | ✅ Done |
 | sqlmap | Automating SQL injection with sqlmap — basic/enumeration/OS-access flag reference, and full GET- and POST-based target walkthroughs (saving a request, session caching, enumerating DBs/tables/columns, dumping data) | ✅ Done (Tasks 1-2; challenge ⬜) |
+| Advanced SQL Injection | Second-order (stored) SQLi, filter evasion, out-of-band exfiltration, HTTP header injection, and automation — also filed under Web Application Pentesting → Injection Attacks | ✅ Done |
 | Cross-Site Scripting (XSS) | Reflected, stored, DOM-based and blind XSS; escaping different injection contexts, filter bypasses, cookie exfiltration, and mitigations | ✅ Done |
 | Server-Side Request Forgery (SSRF) | The four input vectors, identifying/confirming blind SSRF, deny-list/allow-list/open-redirect bypasses, cloud metadata theft, and the Acme avatar traversal lab | ✅ Done |
 | Insecure Direct Object Reference (IDOR) | Broken access control / BOLA; plaintext, encoded, hashed and unpredictable object references, the two-account technique, where vectors hide, and the Acme customer-API lab | ✅ Done |
