@@ -185,7 +185,7 @@ Rooms under **Web Application Pentesting → Injection Attacks** *(a second copy
 | Room | Focus | Status |
 | --- | --- | --- |
 | Advanced SQL Injection | Second-order (stored) SQLi, filter evasion (character encoding, no-quote/no-space bypasses), out-of-band exfiltration (SMB/HTTP/DNS via `INTO OUTFILE`/`xp_cmdshell`/`UTL_HTTP`), HTTP header injection, stored-procedure/XML/JSON injection, automation tools, and best practices | ✅ Done |
-| NoSQL Injection | — | ⬜ Not started |
+| NoSQL Injection | MongoDB operator injection (`$ne`/`$nin` login bypass + account enumeration, `$regex` character-by-character password extraction) and syntax injection (`$where` JS query breakout) | ✅ Done |
 | XXE Injection | — | ⬜ Not started |
 | Server-Side Template Injection | — | ⬜ Not started |
 | LDAP Injection | — | ⬜ Not started |
