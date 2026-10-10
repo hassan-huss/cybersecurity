@@ -187,7 +187,7 @@ Rooms under **Web Application Pentesting → Injection Attacks** *(a second copy
 | Advanced SQL Injection | Second-order (stored) SQLi, filter evasion (character encoding, no-quote/no-space bypasses), out-of-band exfiltration (SMB/HTTP/DNS via `INTO OUTFILE`/`xp_cmdshell`/`UTL_HTTP`), HTTP header injection, stored-procedure/XML/JSON injection, automation tools, and best practices | ✅ Done |
 | NoSQL Injection | MongoDB operator injection (`$ne`/`$nin` login bypass + account enumeration, `$regex` character-by-character password extraction) and syntax injection (`$where` JS query breakout) | ✅ Done |
 | XXE Injection | XML/DTD/entity fundamentals, in-band file disclosure, out-of-band exfiltration via hosted DTD + `php://filter` base64 chain, XXE+SSRF internal port scanning via Burp Intruder, mitigation per language | ✅ Done |
-| Server-Side Template Injection | — | ⬜ Not started |
+| Server-Side Template Injection | Template-engine fundamentals, engine fingerprinting, Smarty/Pug/Jinja2 exploitation (`system()`, `child_process.spawnSync`, Python `__subclasses__` sandbox escape), SSTImap automation, sandboxing + mitigation per engine | ✅ Done |
 | LDAP Injection | — | ⬜ Not started |
 | ORM Injection | — | ⬜ Not started |
 | Injectics (challenge) | — | ⬜ Not started |
