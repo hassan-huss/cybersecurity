@@ -45,7 +45,8 @@ TryHackMe/
 │   └── Privilege-Escalation/
 ├── Web-Application-Pentesting/
 │   ├── Authentication/
-│   └── Injection-Attacks/
+│   ├── Injection-Attacks/
+│   └── Advanced-Server-Side-Attacks/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -67,6 +68,7 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
 | **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
 | **TryHackMe** | Web Application Pentesting → Injection Attacks | Advanced SQL Injection (second-order, filter evasion, OOB exfiltration, header injection), NoSQL Injection (MongoDB), XXE Injection, Server-Side Template Injection, LDAP Injection, and ORM Injection — capped by the Injectics challenge |
+| **TryHackMe** | Web Application Pentesting → Advanced Server-Side Attacks | Insecure deserialisation, SSRF, file inclusion/path traversal, race conditions, and prototype pollution — capped by the Include challenge |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -191,6 +193,17 @@ Rooms under **Web Application Pentesting → Injection Attacks** *(a second copy
 | LDAP Injection | LDAP tree/filter fundamentals, authentication bypass (wildcard + tautology `*)(|(&`), blind boolean extraction, Python automation script | ✅ Done |
 | ORM Injection | ORM fundamentals + framework comparison, SQLi-vs-ORM-injection distinction, identifying vulnerable methods per framework, Laravel `whereRaw()` weak implementation, Laravel query-builder `sort`-parameter JSON-extract bypass CVE, per-framework secure patterns | ✅ Done |
 | Injectics (challenge) | — | ⬜ Not started |
+
+Rooms under **Web Application Pentesting → Advanced Server-Side Attacks**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| Insecure Deserialisation | — | ⬜ Not started |
+| SSRF | — | ⬜ Not started |
+| File Inclusion, Path Traversal | — | ⬜ Not started |
+| Race Conditions | — | ⬜ Not started |
+| Prototype Pollution | — | ⬜ Not started |
+| Include (challenge) | — | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
