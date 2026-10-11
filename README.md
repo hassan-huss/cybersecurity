@@ -198,7 +198,7 @@ Rooms under **Web Application Pentesting → Advanced Server-Side Attacks**:
 
 | Room | Focus | Status |
 | --- | --- | --- |
-| Insecure Deserialisation | — | ⬜ Not started |
+| Insecure Deserialisation | Serialisation/deserialisation fundamentals (PHP, Python Pickle), cookie-tampering property flips, object injection via PHP magic methods, gadget-chain automation (PHPGGC, ysoserial) | ✅ Done |
 | SSRF | — | ⬜ Not started |
 | File Inclusion, Path Traversal | — | ⬜ Not started |
 | Race Conditions | — | ⬜ Not started |
