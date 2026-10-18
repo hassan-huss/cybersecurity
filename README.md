@@ -68,8 +68,8 @@ Web-Security-Academy/
 | **TryHackMe** | Jr. Penetration Tester → Specialized Domains | Branching beyond core pentesting into specialized fields — mobile application security (static analysis, MobSF, OWASP Mobile Top 10), cloud security, and LLM pentesting |
 | **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
 | **TryHackMe** | Web Application Pentesting → Injection Attacks | Advanced SQL Injection (second-order, filter evasion, OOB exfiltration, header injection), NoSQL Injection (MongoDB), XXE Injection, Server-Side Template Injection, LDAP Injection, and ORM Injection — capped by the Injectics challenge |
-| **TryHackMe** | Web Application Pentesting → Advanced Server-Side Attacks | Insecure deserialisation, SSRF, file inclusion/path traversal, race conditions, and prototype pollution — capped by the Include challenge |
-| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata), IDOR (broken access control / BOLA) |
+| **TryHackMe** | Web Application Pentesting → Advanced Server-Side Attacks | Insecure deserialisation (cookie tampering, PHP object injection, gadget chains); SSRF (local-server file disclosure, internal-server pivoting, blind OOB/time-based, SSRF→DoS); file inclusion/path traversal, race conditions, and prototype pollution — capped by the Include challenge |
+| **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata, plus a second advanced SSRF lab on local/internal-server pivoting and SSRF→DoS), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
 More platforms, paths, and rooms/labs are added as I progress.
@@ -199,7 +199,7 @@ Rooms under **Web Application Pentesting → Advanced Server-Side Attacks**:
 | Room | Focus | Status |
 | --- | --- | --- |
 | Insecure Deserialisation | Serialisation/deserialisation fundamentals (PHP, Python Pickle), cookie-tampering property flips, object injection via PHP magic methods, gadget-chain automation (PHPGGC, ysoserial) | ✅ Done |
-| SSRF | — | ⬜ Not started |
+| SSRF | Basic SSRF against the local server (unvalidated file-read parameter leaking `config.php`) and against an internal server (reaching a private-IP admin panel), blind SSRF (out-of-band callback, time-based inference), and SSRF-driven denial of service — also filed under Vulnerabilities → SSRF | ✅ Done |
 | File Inclusion, Path Traversal | — | ⬜ Not started |
 | Race Conditions | — | ⬜ Not started |
 | Prototype Pollution | — | ⬜ Not started |
@@ -214,6 +214,7 @@ Standalone labs under **Vulnerabilities**:
 | Advanced SQL Injection | Second-order (stored) SQLi, filter evasion, out-of-band exfiltration, HTTP header injection, and automation — also filed under Web Application Pentesting → Injection Attacks | ✅ Done |
 | Cross-Site Scripting (XSS) | Reflected, stored, DOM-based and blind XSS; escaping different injection contexts, filter bypasses, cookie exfiltration, and mitigations | ✅ Done |
 | Server-Side Request Forgery (SSRF) | The four input vectors, identifying/confirming blind SSRF, deny-list/allow-list/open-redirect bypasses, cloud metadata theft, and the Acme avatar traversal lab | ✅ Done |
+| Advanced SSRF | Basic SSRF against the local server and against an internal server (HRMS app), blind SSRF (OOB + time-based), and SSRF-driven denial of service — also filed under Web Application Pentesting → Advanced Server-Side Attacks | ✅ Done |
 | Insecure Direct Object Reference (IDOR) | Broken access control / BOLA; plaintext, encoded, hashed and unpredictable object references, the two-account technique, where vectors hide, and the Acme customer-API lab | ✅ Done |
 
 ---
