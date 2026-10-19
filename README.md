@@ -211,7 +211,7 @@ Rooms under **Web Application Pentesting → Advanced Client-Side Attacks**:
 
 | Room | Focus | Status |
 | --- | --- | --- |
-| XSS | Types of XSS (reflected, stored, DOM-based) and their root causes | ⬜ Not started |
+| XSS | Reflected, stored and DOM-based XSS with vulnerable-vs-fixed code in PHP/Node.js/Flask/ASP.NET, CVE labs (copyparty CVE-2023-38501 reflected, Hospital Management System CVE-2021-38757 stored), context breakouts and filter evasion | ✅ Done |
 | CSRF | How CSRF works, exploiting it, and defending against it | ⬜ Not started |
 | DOM-Based Attacks | DOM-based vulnerabilities leveraged for client-side attacks | ⬜ Not started |
 | CORS & SOP | Cross-Origin Resource Sharing and the Same-Origin Policy | ⬜ Not started |
