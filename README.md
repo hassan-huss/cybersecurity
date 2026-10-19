@@ -212,7 +212,7 @@ Rooms under **Web Application Pentesting → Advanced Client-Side Attacks**:
 | Room | Focus | Status |
 | --- | --- | --- |
 | XSS | Reflected, stored and DOM-based XSS with vulnerable-vs-fixed code in PHP/Node.js/Flask/ASP.NET, CVE labs (copyparty CVE-2023-38501 reflected, Hospital Management System CVE-2021-38757 stored), context breakouts and filter evasion | ✅ Done |
-| CSRF | How CSRF works, exploiting it, and defending against it | ⬜ Not started |
+| CSRF | CSRF mechanism + impact, 3 types (traditional/XHR/Flash), 4 chained weaknesses (no token, predictable double-submit token + subdomain cookie injection, SameSite=Lax over GET, the Lax 2-minute POST grace period), XHR/CORS/Referer vectors, defences | ✅ Done |
 | DOM-Based Attacks | DOM-based vulnerabilities leveraged for client-side attacks | ⬜ Not started |
 | CORS & SOP | Cross-Origin Resource Sharing and the Same-Origin Policy | ⬜ Not started |
 | Whats Your Name? (challenge) | Take control of a web app using client-side exploitation skills | ⬜ Not started |
