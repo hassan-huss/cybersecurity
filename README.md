@@ -46,7 +46,8 @@ TryHackMe/
 ├── Web-Application-Pentesting/
 │   ├── Authentication/
 │   ├── Injection-Attacks/
-│   └── Advanced-Server-Side-Attacks/
+│   ├── Advanced-Server-Side-Attacks/
+│   └── Advanced-Client-Side-Attacks/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -69,6 +70,7 @@ Web-Security-Academy/
 | **TryHackMe** | Web Application Pentesting → Authentication | A new TryHackMe path focused specifically on web app pentesting, started after finishing the Jr. Penetration Tester path. Authentication module: enumerating auth mechanisms and brute force, OAuth 2.0 flow + attacks (redirect hijacking, CSRF, implicit-grant token theft), JWT security, and MFA/2FA implementation flaws (OTP leakage, logic bypass, Evilginx) |
 | **TryHackMe** | Web Application Pentesting → Injection Attacks | Advanced SQL Injection (second-order, filter evasion, OOB exfiltration, header injection), NoSQL Injection (MongoDB), XXE Injection, Server-Side Template Injection, LDAP Injection, and ORM Injection — capped by the Injectics challenge |
 | **TryHackMe** | Web Application Pentesting → Advanced Server-Side Attacks | Insecure deserialisation (cookie tampering, PHP object injection, gadget chains); SSRF (local-server file disclosure, internal-server pivoting, blind OOB/time-based, SSRF→DoS); advanced file inclusion/path traversal (PHP wrappers, base-directory breakouts, three LFI→RCE escalation paths); race conditions (TOCTOU, Burp Repeater parallel request groups); and prototype pollution (property-by-path XSS, merge/clone property injection, DoS) — capped by the Include challenge |
+| **TryHackMe** | Web Application Pentesting → Advanced Client-Side Attacks | Browser-side attacks: XSS (reflected, stored, DOM-based and their root causes), CSRF (how it works, exploitation, defences), DOM-based vectors, and the Same-Origin Policy (SOP) / Cross-Origin Resource Sharing (CORS) — capped by the Whats Your Name? challenge |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata, plus a second advanced SSRF lab on local/internal-server pivoting and SSRF→DoS), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -204,6 +206,16 @@ Rooms under **Web Application Pentesting → Advanced Server-Side Attacks**:
 | Race Conditions | TOCTOU (Time-of-Check to Time-of-Use) vulnerabilities, hidden intermediate states in business logic, and exploiting a mobile-credit-transfer demo with Burp Suite Repeater's parallel request-group sending (HTTP/2 single-packet vs HTTP/1 last-byte synchronisation) | ✅ Done |
 | Prototype Pollution | JS prototype/inheritance fundamentals, exploitation via property-definition-by-path (Lodash `_.set` → stored XSS), object-merge/clone functions (`__proto__` → silent property injection across every instance), prototype-pollution-driven DoS (overriding `Object.prototype.toString`), detection challenges + tooling | ✅ Done |
 | Include (challenge) | — | ⬜ Not started |
+
+Rooms under **Web Application Pentesting → Advanced Client-Side Attacks**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| XSS | Types of XSS (reflected, stored, DOM-based) and their root causes | ⬜ Not started |
+| CSRF | How CSRF works, exploiting it, and defending against it | ⬜ Not started |
+| DOM-Based Attacks | DOM-based vulnerabilities leveraged for client-side attacks | ⬜ Not started |
+| CORS & SOP | Cross-Origin Resource Sharing and the Same-Origin Policy | ⬜ Not started |
+| Whats Your Name? (challenge) | Take control of a web app using client-side exploitation skills | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
