@@ -47,7 +47,8 @@ TryHackMe/
 │   ├── Authentication/
 │   ├── Injection-Attacks/
 │   ├── Advanced-Server-Side-Attacks/
-│   └── Advanced-Client-Side-Attacks/
+│   ├── Advanced-Client-Side-Attacks/
+│   └── HTTP-Request-Smuggling/
 └── Vulnerabilities/
     ├── IDOR/
     ├── SQLi/
@@ -71,6 +72,7 @@ Web-Security-Academy/
 | **TryHackMe** | Web Application Pentesting → Injection Attacks | Advanced SQL Injection (second-order, filter evasion, OOB exfiltration, header injection), NoSQL Injection (MongoDB), XXE Injection, Server-Side Template Injection, LDAP Injection, and ORM Injection — capped by the Injectics challenge |
 | **TryHackMe** | Web Application Pentesting → Advanced Server-Side Attacks | Insecure deserialisation (cookie tampering, PHP object injection, gadget chains); SSRF (local-server file disclosure, internal-server pivoting, blind OOB/time-based, SSRF→DoS); advanced file inclusion/path traversal (PHP wrappers, base-directory breakouts, three LFI→RCE escalation paths); race conditions (TOCTOU, Burp Repeater parallel request groups); and prototype pollution (property-by-path XSS, merge/clone property injection, DoS) — capped by the Include challenge |
 | **TryHackMe** | Web Application Pentesting → Advanced Client-Side Attacks | Browser-side attacks: XSS (reflected, stored, DOM-based and their root causes), CSRF (how it works, exploitation, defences), DOM-based vectors, and the Same-Origin Policy (SOP) / Cross-Origin Resource Sharing (CORS) — capped by the Whats Your Name? challenge |
+| **TryHackMe** | Web Application Pentesting → HTTP Request Smuggling | Front-end/back-end parsing disagreements over request boundaries (CL.TE/TE.CL, Transfer-Encoding obfuscation), extended to HTTP/2, WebSocket upgrades, and browser-level desync — capped by the El Bandito challenge |
 | **TryHackMe** | Vulnerabilities | Standalone, vulnerability-focused labs outside a single path — SQLi (login bypass, UNION, blind, second-order, plus automating exploitation with sqlmap), XSS (reflected, stored, DOM, blind + filter bypass), SSRF (vectors, defence bypasses, cloud metadata, plus a second advanced SSRF lab on local/internal-server pivoting and SSRF→DoS), IDOR (broken access control / BOLA) |
 | **PortSwigger** | Web Security Academy → SQL Injection | In progress |
 
@@ -216,6 +218,16 @@ Rooms under **Web Application Pentesting → Advanced Client-Side Attacks**:
 | DOM-Based Attacks | The DOM, SPA frontend-framework pitfalls, source/sink model, DOM-based open redirect, DOM-based XSS vs conventional XSS, the delivery problem, 2010 Twitter incident — capped by a non-guided Vue-app challenge (not solved/written up) | ✅ Done |
 | CORS & SOP | SOP (origin matching), CORS headers/ACAO, simple vs preflight requests, 3 misconfigurations (arbitrary origin reflection, bad regex, trusted null origin chained with stored XSS), defences | ✅ Done |
 | Whats Your Name? (challenge) | Take control of a web app using client-side exploitation skills | ⬜ Not started |
+
+Rooms under **Web Application Pentesting → HTTP Request Smuggling**:
+
+| Room | Focus | Status |
+| --- | --- | --- |
+| HTTP Request Smuggling | — | ⬜ Not started |
+| HTTP/2 Request Smuggling | — | ⬜ Not started |
+| Request Smuggling: WebSockets | — | ⬜ Not started |
+| HTTP Browser Desync | — | ⬜ Not started |
+| El Bandito (challenge) | — | ⬜ Not started |
 
 Standalone labs under **Vulnerabilities**:
 
